@@ -1,0 +1,95 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+  padding-bottom: var(--espacio-8);
+}
+
+.bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.etiqueta {
+  font-size: var(--texto-base);
+  font-weight: 700;
+}
+
+.ayuda {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+.dosColumnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-2);
+}
+
+.opcionGrande {
+  border: 1.5px solid var(--color-borde-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  border-radius: var(--radio-campo);
+  padding: 16px;
+  min-height: var(--toque-minimo);
+}
+
+.aceptado {
+  border: 2px solid var(--sem-verde);
+  background: var(--chip-verde-fondo);
+  color: var(--chip-verde-texto);
+}
+
+.rechazado {
+  border: 2px solid var(--sem-rojo);
+  background: var(--chip-rojo-fondo);
+  color: var(--chip-rojo-texto);
+}
+
+.nota {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  text-align: center;
+}
+
+/* ── Listas de franjas y turnos ───────────────────────────── */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.filaFranja {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.hora {
+  font-size: 22px;
+  font-weight: 800;
+  min-width: 64px;
+}
+
+.franjaCentro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.franjaDetalle {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+.subtitulo {
+  font-size: 14px;
+  color: var(--color-apagado);
+  margin-bottom: var(--espacio-5);
+}

@@ -1,0 +1,9 @@
+.sello {
+  background: var(--color-marca-suave);
+  border-radius: var(--radio-campo);
+  padding: 10px 14px;
+  font-size: var(--texto-sm);
+  color: var(--color-marca);
+  font-weight: 600;
+  margin-bottom: var(--espacio-5);
+}

@@ -1,0 +1,33 @@
+.mensaje {
+  border-radius: var(--radio-campo);
+  padding: 12px 14px;
+  font-size: var(--texto-base);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.error {
+  background: var(--chip-rojo-fondo);
+  color: var(--chip-rojo-texto);
+}
+
+.aviso {
+  background: var(--chip-amarillo-fondo);
+  color: var(--chip-amarillo-texto);
+}
+
+.exito {
+  background: var(--chip-verde-fondo);
+  color: var(--chip-verde-texto);
+}
+
+.info {
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+}
+
+.detalle {
+  margin: var(--espacio-2) 0 0;
+  padding-left: var(--espacio-6);
+  font-weight: 600;
+}

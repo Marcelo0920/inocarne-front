@@ -1,0 +1,163 @@
+/* Estilos compartidos por los módulos del supervisor que muestran listados:
+   tabla en escritorio y tarjetas en el teléfono. */
+
+.titulo {
+  font-size: var(--texto-3xl);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.bajada {
+  font-size: 14px;
+  color: var(--color-apagado);
+  margin: var(--espacio-1) 0 var(--espacio-4);
+}
+
+/* Título de la pantalla y su acción principal, en la misma línea.
+   La acción queda arriba a la derecha, donde el supervisor la busca, y no
+   compite con el listado que ocupa el resto de la pantalla. */
+.encabezadoPagina {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--espacio-5);
+}
+
+.encabezadoPagina .bajada {
+  margin-bottom: 0;
+}
+
+.subtitulo {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  margin-bottom: var(--espacio-3);
+}
+
+.fuerte {
+  font-weight: 800;
+}
+
+.apagado {
+  color: var(--color-apagado);
+  font-size: 12.5px;
+}
+
+.tabla {
+  display: none;
+}
+
+.tarjetas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.tarjetaTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.panelDetalle {
+  margin-top: var(--espacio-5);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  padding: var(--espacio-6);
+}
+
+.itemHistorial {
+  border: 1px solid var(--color-divisor);
+  border-radius: var(--radio-campo);
+  padding: 10px var(--espacio-5);
+  margin-bottom: var(--espacio-2);
+  font-size: 14px;
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-1);
+}
+
+.filtros {
+  display: flex;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--espacio-3);
+}
+
+.filtro {
+  border: 1.5px solid var(--color-borde-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: var(--radio-pastilla);
+  padding: 8px 14px;
+  min-height: 36px;
+}
+
+.filtroActivo {
+  border: 2px solid var(--color-marca);
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+}
+
+.separador {
+  width: 1px;
+  background: var(--color-borde);
+  margin: 0 var(--espacio-1);
+}
+
+@media (min-width: 900px) {
+  .tarjetas {
+    display: none;
+  }
+
+  .tabla {
+    display: block;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-tarjeta);
+    overflow: hidden;
+  }
+
+  .encabezado,
+  .fila {
+    display: grid;
+    align-items: center;
+    gap: var(--espacio-3);
+    padding: 13px var(--espacio-6);
+    border-bottom: 1px solid var(--color-divisor);
+  }
+
+  .encabezado {
+    font-size: var(--texto-xs);
+    font-weight: 700;
+    color: var(--color-apagado);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fila {
+    width: 100%;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    font-size: 14px;
+  }
+
+  .fila:hover {
+    background: var(--color-fondo);
+  }
+}

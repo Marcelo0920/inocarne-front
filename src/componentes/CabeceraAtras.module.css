@@ -1,0 +1,31 @@
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+}
+
+.atras {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-campo);
+  width: var(--toque-minimo);
+  height: var(--toque-minimo);
+  min-width: var(--toque-minimo);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--color-tinta);
+}
+
+.titulo {
+  font-size: var(--texto-2xl);
+  font-weight: 800;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.subtitulo {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  margin-top: 2px;
+}

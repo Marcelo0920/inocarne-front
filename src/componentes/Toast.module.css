@@ -1,0 +1,25 @@
+.toast {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(var(--alto-barra-inferior) + 18px);
+  background: var(--color-tinta);
+  color: #fff;
+  border-radius: var(--radio-medio);
+  padding: 14px 18px;
+  font-size: var(--texto-base);
+  font-weight: 600;
+  line-height: 1.35;
+  box-shadow: var(--sombra-flotante);
+  z-index: 50;
+}
+
+@media (min-width: 900px) {
+  .toast {
+    left: 50%;
+    right: auto;
+    bottom: 28px;
+    transform: translateX(-50%);
+    max-width: 640px;
+  }
+}

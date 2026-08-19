@@ -1,0 +1,66 @@
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--espacio-3);
+}
+
+.etiqueta {
+  font-size: var(--texto-base);
+  font-weight: 700;
+}
+
+.ayuda {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+.campo {
+  width: 100%;
+  padding: 14px;
+  border: 1.5px solid var(--color-borde-campo);
+  border-radius: var(--radio-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  font-size: var(--texto-lg);
+}
+
+/* La medición se escribe con el dedo y se lee de lejos: va más grande. */
+.medicion {
+  font-size: 22px;
+  padding: 16px;
+}
+
+.area {
+  min-height: 70px;
+  resize: vertical;
+  font-size: var(--texto-lg);
+}
+
+.dentro {
+  border-color: var(--sem-verde);
+}
+
+.fuera {
+  border-color: var(--sem-rojo);
+}
+
+.conError {
+  border-color: var(--sem-rojo);
+}
+
+.error {
+  font-size: var(--texto-sm);
+  color: var(--chip-rojo-texto);
+  font-weight: 700;
+}
+
+.resultado {
+  align-self: flex-start;
+}

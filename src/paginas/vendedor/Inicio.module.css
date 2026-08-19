@@ -1,0 +1,177 @@
+.cabecera {
+  background: var(--color-marca);
+  color: #fff;
+  padding: var(--espacio-7) var(--espacio-7) var(--espacio-8);
+  border-radius: 0 0 22px 22px;
+}
+
+.filaCabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.saludo {
+  font-size: var(--texto-base);
+  opacity: 0.85;
+}
+
+.puesto {
+  font-size: var(--texto-4xl);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.reloj {
+  text-align: right;
+}
+
+.fecha {
+  font-size: 14px;
+  opacity: 0.85;
+  text-transform: capitalize;
+}
+
+.hora {
+  font-size: var(--texto-7, 20px);
+  font-weight: 700;
+}
+
+.aviso {
+  margin-top: var(--espacio-5);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.14);
+  border: none;
+  border-radius: var(--radio-campo);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  color: #fff;
+  font-size: var(--texto-base);
+  font-weight: 600;
+  min-height: var(--toque-minimo);
+}
+
+.avisoTexto {
+  flex: 1;
+  text-align: left;
+}
+
+.cuerpo {
+  padding: var(--espacio-6);
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3);
+}
+
+.tarjeta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  padding: var(--espacio-6) var(--espacio-5);
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.destacada {
+  border: 2px solid var(--color-marca);
+}
+
+.tarjetaTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+  min-height: 32px;
+}
+
+.icono {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.tarjetaTitulo {
+  font-size: var(--texto-md);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 6px;
+}
+
+.tarjetaDetalle {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+/* Filas anchas del pie: notificaciones y cuenta. Ocupan todo el ancho y
+   pasan del alto mínimo de toque, así se aciertan con el pulgar. */
+.fila {
+  margin-top: var(--espacio-3);
+  width: 100%;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  padding: var(--espacio-5) var(--espacio-6);
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  color: inherit;
+  font: inherit;
+  min-height: var(--toque-minimo);
+}
+
+.campana {
+  position: relative;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+  flex-shrink: 0;
+}
+
+.insignia {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: var(--sem-rojo);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 5px;
+}
+
+.filaTexto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.filaTexto .tarjetaTitulo {
+  margin-top: 0;
+}
+
+.flecha {
+  color: var(--color-marca);
+  font-size: 22px;
+  font-weight: 700;
+}

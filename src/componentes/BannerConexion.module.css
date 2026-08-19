@@ -1,0 +1,23 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: 10px var(--espacio-6);
+  font-size: var(--texto-sm);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sinConexion {
+  background: var(--chip-amarillo-fondo);
+  color: var(--chip-amarillo-texto);
+}
+
+.enviando {
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+}
+
+.icono {
+  font-size: var(--texto-md);
+}

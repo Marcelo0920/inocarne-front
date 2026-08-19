@@ -1,0 +1,28 @@
+.aplicacion {
+  min-height: 100%;
+  background: var(--color-fondo);
+  display: flex;
+  flex-direction: column;
+}
+
+/* La aplicación del vendedor es de teléfono; en una pantalla grande se centra
+   en lugar de estirarse, que sería ilegible. */
+.marco {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-fondo);
+}
+
+.contenido {
+  flex: 1;
+  padding: var(--espacio-6);
+  padding-bottom: calc(var(--espacio-9) + env(safe-area-inset-bottom, 0px));
+}
+
+.sinRelleno {
+  padding: 0;
+}

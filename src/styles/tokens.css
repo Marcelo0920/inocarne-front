@@ -1,0 +1,96 @@
+/**
+ * Tokens del diseño de INOCARNE.
+ *
+ * Los valores salen tal cual de los tableros de Claude Design: cambiar algo
+ * aquí lo cambia en toda la aplicación, y ningún componente debería escribir
+ * un color a mano.
+ *
+ * Ojo con las dos familias del semáforo: el punto es un color sólido y
+ * saturado; el chip es un fondo pálido con texto oscuro. No son el mismo valor.
+ */
+:root {
+  /* ── Marca ──────────────────────────────────────────────── */
+  --color-marca: #1d5d9b;
+  --color-marca-oscuro: #164a7e;
+  --color-marca-suave: #e8f0f8;
+
+  /* ── Texto ──────────────────────────────────────────────── */
+  --color-tinta: #17242f;
+  --color-apagado: #5b6b78;
+  --color-apagado-claro: #667585;
+
+  /* ── Superficies ────────────────────────────────────────── */
+  --color-fondo: #f6f8fa;
+  --color-superficie: #ffffff;
+  --color-fondo-marco: #e8edf2;
+
+  /* ── Bordes ─────────────────────────────────────────────── */
+  --color-borde: #dce3e9;
+  --color-divisor: #eef1f4;
+  --color-borde-campo: #c6d0d9;
+  --color-borde-punteado: #9ab0c2;
+
+  /* ── Semáforo: punto sólido ─────────────────────────────── */
+  --sem-verde: #1b7a46;
+  --sem-amarillo: #e8a317;
+  --sem-rojo: #b3261e;
+  --sem-gris: #c3cdd6;
+
+  /* ── Semáforo: chip (fondo + texto) ─────────────────────── */
+  --chip-verde-fondo: #e7f3ec;
+  --chip-verde-texto: #1b7a46;
+  --chip-amarillo-fondo: #fbf0db;
+  --chip-amarillo-texto: #9a6700;
+  --chip-rojo-fondo: #fbeae8;
+  --chip-rojo-texto: #b3261e;
+  --chip-gris-fondo: #eef1f4;
+  --chip-gris-texto: #667585;
+  --chip-azul-fondo: var(--color-marca-suave);
+  --chip-azul-texto: var(--color-marca);
+
+  /* El chip azul lleno se usa para "le toca ahora": tiene que resaltar. */
+  --chip-azul-lleno-fondo: var(--color-marca);
+  --chip-azul-lleno-texto: #ffffff;
+
+  /* ── Campos con hallazgo (inspección) ───────────────────── */
+  --color-hallazgo-borde: #e5b4b0;
+  --color-hallazgo-fondo: #fff8f7;
+
+  /* ── Radios ─────────────────────────────────────────────── */
+  --radio-pastilla: 999px;
+  --radio-tarjeta: 16px;
+  --radio-medio: 14px;
+  --radio-campo: 12px;
+  --radio-chico: 10px;
+
+  /* ── Espaciado ──────────────────────────────────────────── */
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 10px;
+  --espacio-4: 12px;
+  --espacio-5: 14px;
+  --espacio-6: 16px;
+  --espacio-7: 20px;
+  --espacio-8: 24px;
+  --espacio-9: 32px;
+
+  /* ── Tipografía ─────────────────────────────────────────── */
+  --fuente: 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --texto-xs: 12px;
+  --texto-sm: 13px;
+  --texto-base: 15px;
+  --texto-md: 16px;
+  --texto-lg: 17px;
+  --texto-xl: 19px;
+  --texto-2xl: 21px;
+  --texto-3xl: 24px;
+  --texto-4xl: 26px;
+  --texto-5xl: 30px;
+
+  /* ── Otros ──────────────────────────────────────────────── */
+  --sombra-flotante: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --ancho-barra-lateral: 248px;
+  --alto-barra-inferior: 66px;
+  /* Mínimo cómodo para manos con guantes en un mercado húmedo. */
+  --toque-minimo: 44px;
+}

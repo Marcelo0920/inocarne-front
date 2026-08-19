@@ -1,0 +1,192 @@
+.aplicacion {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Teléfono: pestañas abajo ─────────────────────────────── */
+.contenido {
+  flex: 1;
+  padding: var(--espacio-6);
+  padding-bottom: calc(var(--alto-barra-inferior) + var(--espacio-6));
+}
+
+.barraInferior {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-superficie);
+  border-top: 1px solid var(--color-borde);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 4px calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+}
+
+/* Navegación, no prosa: el subrayado de enlace aquí solo ensucia. Ambas
+   barras se declaran juntas para que ninguna se quede sin el reajuste. */
+.pestana,
+.enlace {
+  text-decoration: none;
+}
+
+.pestana {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  position: relative;
+  color: var(--color-apagado);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pestanaActiva {
+  color: var(--color-marca);
+  font-weight: 800;
+}
+
+.icono {
+  font-size: 21px;
+  opacity: 0.55;
+  line-height: 1;
+}
+
+.pestanaActiva .icono {
+  opacity: 1;
+}
+
+.alerta {
+  position: absolute;
+  top: 0;
+  right: 22%;
+  background: var(--sem-rojo);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0 5px;
+}
+
+.barraLateral {
+  display: none;
+}
+
+/* ── Escritorio: barra lateral ────────────────────────────── */
+@media (min-width: 900px) {
+  .aplicacion {
+    flex-direction: row;
+  }
+
+  .barraLateral {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: var(--ancho-barra-lateral);
+    min-width: var(--ancho-barra-lateral);
+    background: var(--color-superficie);
+    border-right: 1px solid var(--color-borde);
+    padding: var(--espacio-7) var(--espacio-4);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-3);
+    padding: 4px 10px 18px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radio-campo);
+    background: var(--color-marca);
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nombreMarca {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-marca);
+  }
+
+  .rol {
+    font-size: var(--texto-xs);
+    color: var(--color-apagado);
+  }
+
+  .enlace {
+    display: flex;
+    align-items: center;
+    gap: var(--espacio-3);
+    padding: 11px 12px;
+    border-radius: var(--radio-chico);
+    background: none;
+    border: none;
+    color: var(--color-tinta);
+    font-size: 14.5px;
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+  }
+
+  .enlace:hover {
+    background: var(--color-fondo);
+  }
+
+  .enlaceActivo {
+    background: var(--color-marca-suave);
+    color: var(--color-marca);
+    font-weight: 800;
+  }
+
+  .enlaceEtiqueta {
+    flex: 1;
+  }
+
+  .contador {
+    background: var(--sem-rojo);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 1px 7px;
+  }
+
+  .pie {
+    margin-top: auto;
+    padding: var(--espacio-4) 10px;
+    border-top: 1px solid var(--color-divisor);
+    font-size: var(--texto-sm);
+  }
+
+  .pieNombre {
+    font-weight: 700;
+  }
+
+  .pieFecha {
+    color: var(--color-apagado);
+  }
+
+  .contenido {
+    padding: 28px 32px;
+    max-width: 1280px;
+    padding-bottom: 28px;
+  }
+
+  .barraInferior {
+    display: none;
+  }
+}

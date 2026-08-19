@@ -1,0 +1,42 @@
+.nombre {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+}
+
+.ficha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3) var(--espacio-6);
+  margin: 0;
+}
+
+.fichaEtiqueta {
+  color: var(--color-apagado);
+  font-size: 14px;
+}
+
+.fichaValor {
+  font-weight: 700;
+  font-size: var(--texto-base);
+  margin: 0;
+}
+
+.encabezadoSeccion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: var(--espacio-7) 0 var(--espacio-2);
+}
+
+.filaMantenimiento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-size: var(--texto-base);
+}
+
+.descripcion {
+  font-size: 14px;
+  margin-top: var(--espacio-1);
+}

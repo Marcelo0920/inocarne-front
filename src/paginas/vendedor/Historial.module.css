@@ -1,0 +1,61 @@
+.filtros {
+  display: flex;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--espacio-4);
+}
+
+.filtro {
+  border: 1.5px solid var(--color-borde-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radio-pastilla);
+  padding: 8px 14px;
+  min-height: 38px;
+}
+
+.filtroActivo {
+  border: 2px solid var(--color-marca);
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.icono {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.centro {
+  flex: 1;
+  min-width: 0;
+}
+
+.titulo {
+  font-size: var(--texto-base);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.detalle {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  margin-top: 2px;
+  /* Las desviaciones pueden ser largas: se recortan para no romper la fila. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.masBoton {
+  margin-top: var(--espacio-4);
+}

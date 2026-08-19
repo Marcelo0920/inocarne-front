@@ -1,0 +1,171 @@
+.titulo {
+  font-size: var(--texto-3xl);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cadena {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  margin: var(--espacio-1) 0 var(--espacio-4);
+}
+
+.filtros {
+  display: flex;
+  gap: var(--espacio-2);
+  flex-wrap: wrap;
+  margin: var(--espacio-4) 0;
+}
+
+.filtro {
+  border: 1.5px solid var(--color-borde-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  font-size: var(--texto-sm);
+  font-weight: 700;
+  border-radius: var(--radio-pastilla);
+  padding: 8px 16px;
+  min-height: 38px;
+}
+
+.filtroActivo {
+  border: 2px solid var(--color-marca);
+  background: var(--color-marca-suave);
+  color: var(--color-marca);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.filaTop {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  flex-wrap: wrap;
+}
+
+.numero {
+  font-size: var(--texto-sm);
+  font-weight: 800;
+  color: var(--color-apagado);
+}
+
+.puesto {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.espaciador {
+  flex: 1;
+}
+
+.hallazgo {
+  font-size: 14.5px;
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+.meta {
+  font-size: 12.5px;
+  color: var(--color-apagado);
+  margin-top: var(--espacio-1);
+}
+
+/* ── Detalle ──────────────────────────────────────────────── */
+.detalle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  max-width: 680px;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin: 0;
+}
+
+.datoEtiqueta {
+  color: var(--color-apagado);
+  font-size: 14px;
+}
+
+.datoValor {
+  font-weight: 700;
+  font-size: var(--texto-base);
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Cada paso del seguimiento va en su propio bloque con título: leído de
+   arriba abajo cuenta el expediente —qué se encontró, qué se hará, qué se
+   verificó— en lugar de dejar los campos sueltos sobre el fondo. */
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  padding: var(--espacio-6);
+}
+
+.seccionTitulo {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.seccionBajada {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  margin-top: -12px;
+}
+
+.evidenciaBloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  border-top: 1px solid var(--color-divisor);
+  padding-top: var(--espacio-4);
+}
+
+.evidencias {
+  display: flex;
+  gap: var(--espacio-3);
+  flex-wrap: wrap;
+}
+
+.miniaturaEnlace {
+  display: block;
+  border-radius: var(--radio-campo);
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+  line-height: 0;
+}
+
+.miniaturaEnlace:hover {
+  border-color: var(--color-marca);
+}
+
+.miniatura {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  background: var(--color-fondo);
+}
+
+.subtitulo {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+}
+
+.nota {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  text-align: center;
+}

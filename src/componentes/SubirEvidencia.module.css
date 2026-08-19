@@ -1,0 +1,66 @@
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.oculto {
+  display: none;
+}
+
+.boton {
+  width: 100%;
+  background: #f2f6f9;
+  border: 1.5px dashed var(--color-borde-punteado);
+  color: var(--color-marca);
+  border-radius: var(--radio-campo);
+  padding: 16px;
+  font-size: var(--texto-md);
+  font-weight: 700;
+  min-height: var(--toque-minimo);
+}
+
+.conAdjuntos {
+  background: var(--chip-verde-fondo);
+  color: var(--chip-verde-texto);
+  border-color: var(--sem-verde);
+}
+
+.miniaturas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.miniatura {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radio-chico);
+  overflow: hidden;
+  border: 1px solid var(--color-borde);
+}
+
+.miniatura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.quitar {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(23, 36, 47, 0.78);
+  color: #fff;
+  font-size: var(--texto-xs);
+  line-height: 1;
+}

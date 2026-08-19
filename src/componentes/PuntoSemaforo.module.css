@@ -1,0 +1,28 @@
+.punto {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chico {
+  width: 10px;
+  height: 10px;
+}
+
+.verde {
+  background: var(--sem-verde);
+}
+.amarillo {
+  background: var(--sem-amarillo);
+}
+.rojo {
+  background: var(--sem-rojo);
+}
+.gris {
+  background: var(--sem-gris);
+}
+.azul {
+  background: var(--color-marca);
+}

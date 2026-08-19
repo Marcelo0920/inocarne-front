@@ -1,0 +1,89 @@
+.fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 36, 47, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 60;
+  padding: 0;
+}
+
+/* En el teléfono sube desde abajo y ocupa el ancho: el pulgar llega a todo. */
+.panel {
+  background: var(--color-superficie);
+  width: 100%;
+  max-height: 92vh;
+  border-radius: 22px 22px 0 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sombra-flotante);
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+  padding: var(--espacio-6) var(--espacio-6) var(--espacio-4);
+  border-bottom: 1px solid var(--color-divisor);
+}
+
+.titulo {
+  font-size: var(--texto-xl);
+  font-weight: 800;
+}
+
+.cerrar {
+  width: var(--toque-minimo);
+  height: var(--toque-minimo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-campo);
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cuerpo {
+  padding: var(--espacio-6);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.pie {
+  display: flex;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4) var(--espacio-6)
+    calc(var(--espacio-6) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--color-divisor);
+}
+
+.pie > * {
+  flex: 1;
+}
+
+@media (min-width: 700px) {
+  .fondo {
+    align-items: center;
+    padding: var(--espacio-6);
+  }
+
+  .panel {
+    max-width: 520px;
+    border-radius: var(--radio-tarjeta);
+  }
+
+  .pie {
+    justify-content: flex-end;
+    padding: var(--espacio-4) var(--espacio-6) var(--espacio-6);
+  }
+
+  .pie > * {
+    flex: 0 0 auto;
+  }
+}

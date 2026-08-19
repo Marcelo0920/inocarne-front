@@ -1,0 +1,252 @@
+.encabezado {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--espacio-4);
+}
+
+.titulo {
+  font-size: var(--texto-3xl);
+  font-weight: 800;
+}
+
+.nota {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+/* ── Baldosas de resumen ──────────────────────────────────── */
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--espacio-2);
+  margin-bottom: var(--espacio-5);
+}
+
+/* En el teléfono el número va al lado de su etiqueta, no encima: la fila
+   ocupa la mitad de alto y las cinco baldosas se leen de un vistazo. */
+.baldosa {
+  display: flex;
+  align-items: baseline;
+  gap: var(--espacio-2);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-medio);
+  padding: var(--espacio-4) var(--espacio-5);
+}
+
+/* Con cinco baldosas la última quedaba sola en su fila; así ocupa el ancho
+   completo y la cuadrícula se ve terminada. */
+.baldosa:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.baldosaValor {
+  font-size: var(--texto-4xl);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.baldosaEtiqueta {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  line-height: 1.25;
+}
+
+.verde {
+  color: var(--sem-verde);
+}
+.amarillo {
+  color: var(--chip-amarillo-texto);
+}
+.rojo {
+  color: var(--sem-rojo);
+}
+.gris,
+.neutro {
+  color: var(--color-apagado);
+}
+
+@media (min-width: 700px) {
+  .resumen {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--espacio-3);
+  }
+
+  .baldosa:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+
+/* ── Leyenda ──────────────────────────────────────────────── */
+/* Dos columnas parejas en el teléfono: repartidas quedan mejor que
+   desbordando a una tercera línea suelta. */
+.leyenda {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  justify-content: start;
+  gap: var(--espacio-2) var(--espacio-5);
+  margin-bottom: var(--espacio-4);
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+}
+
+.leyendaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (min-width: 700px) {
+  .leyenda {
+    grid-template-columns: repeat(4, auto);
+    gap: var(--espacio-6);
+  }
+}
+
+/* ── Matriz (solo escritorio) ─────────────────────────────── */
+.tabla {
+  display: none;
+}
+
+.tarjetas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.tarjetaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.nombrePuesto {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+}
+
+.puntos {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-3);
+  flex-wrap: wrap;
+}
+
+.resumenFila {
+  font-size: var(--texto-xs);
+  color: var(--color-apagado);
+  margin-left: var(--espacio-1);
+}
+
+@media (min-width: 900px) {
+  .tarjetas {
+    display: none;
+  }
+
+  .tabla {
+    display: block;
+    background: var(--color-superficie);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio-tarjeta);
+    overflow: hidden;
+  }
+
+  .filaEncabezado,
+  .fila {
+    display: grid;
+    align-items: center;
+    padding: 13px var(--espacio-6);
+    border-bottom: 1px solid var(--color-divisor);
+    gap: var(--espacio-2);
+  }
+
+  .filaEncabezado {
+    font-size: var(--texto-xs);
+    font-weight: 700;
+    color: var(--color-apagado);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fila {
+    width: 100%;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+
+  .fila:hover {
+    background: var(--color-fondo);
+  }
+
+  .filaActiva {
+    background: var(--color-marca-suave);
+  }
+
+  .celdaCentro {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* ── Detalle del puesto ───────────────────────────────────── */
+.detalle {
+  margin-top: var(--espacio-5);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-tarjeta);
+  padding: var(--espacio-6) var(--espacio-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.detalleEncabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.detalleTitulo {
+  font-size: var(--texto-lg);
+  font-weight: 800;
+}
+
+.detalleRejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--espacio-2);
+}
+
+.detalleItem {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  border: 1px solid var(--color-divisor);
+  border-radius: var(--radio-campo);
+  padding: 10px var(--espacio-5);
+}
+
+.detalleEtiqueta {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.detalleTexto {
+  font-size: var(--texto-sm);
+  color: var(--color-apagado);
+  text-align: right;
+}

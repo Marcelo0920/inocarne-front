@@ -1,0 +1,41 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--radio-pastilla);
+  padding: 4px 10px;
+  font-size: var(--texto-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.grande {
+  padding: 5px 12px;
+  font-size: var(--texto-sm);
+}
+
+.verde {
+  background: var(--chip-verde-fondo);
+  color: var(--chip-verde-texto);
+}
+.amarillo {
+  background: var(--chip-amarillo-fondo);
+  color: var(--chip-amarillo-texto);
+}
+.rojo {
+  background: var(--chip-rojo-fondo);
+  color: var(--chip-rojo-texto);
+}
+.gris {
+  background: var(--chip-gris-fondo);
+  color: var(--chip-gris-texto);
+}
+/* Azul lleno: es el que grita "esto es lo que toca ahora". */
+.azul {
+  background: var(--chip-azul-lleno-fondo);
+  color: var(--chip-azul-lleno-texto);
+}
+
+.icono {
+  flex-shrink: 0;
+}

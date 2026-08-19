@@ -1,0 +1,46 @@
+.pantalla {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-8) var(--espacio-6);
+}
+
+.tarjeta {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+}
+
+.marca {
+  text-align: center;
+  margin-bottom: var(--espacio-2);
+}
+
+.logo {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: var(--color-marca);
+  color: #fff;
+  font-size: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.nombre {
+  font-size: var(--texto-5xl);
+  font-weight: 800;
+  color: var(--color-marca);
+  margin-top: var(--espacio-5);
+}
+
+.bajada {
+  font-size: var(--texto-base);
+  color: var(--color-apagado);
+  margin-top: var(--espacio-1);
+}

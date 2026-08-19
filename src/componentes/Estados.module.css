@@ -1,0 +1,63 @@
+.centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-9) var(--espacio-6);
+  text-align: center;
+  color: var(--color-apagado);
+}
+
+.icono {
+  color: var(--color-borde-punteado);
+}
+
+.titulo {
+  font-size: var(--texto-md);
+  font-weight: 700;
+  color: var(--color-tinta);
+}
+
+.detalle {
+  font-size: var(--texto-base);
+  max-width: 34ch;
+}
+
+.girador {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--color-borde);
+  border-top-color: var(--color-marca);
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.barra {
+  height: 74px;
+  border-radius: var(--radio-tarjeta);
+  background: linear-gradient(90deg, #eef1f4 25%, #e4e9ee 37%, #eef1f4 63%);
+  background-size: 400% 100%;
+  animation: brillo 1.4s ease infinite;
+}
+
+@keyframes brillo {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}

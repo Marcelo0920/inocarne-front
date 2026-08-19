@@ -1,0 +1,58 @@
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  border: none;
+  border-radius: var(--radio-medio);
+  font-weight: 800;
+  text-align: center;
+  min-height: var(--toque-minimo);
+  transition: filter 0.15s ease;
+}
+
+.boton:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+
+/* ── Variantes ────────────────────────────────────────────── */
+.primario {
+  background: var(--color-marca);
+  color: #fff;
+  padding: 18px;
+  font-size: 18px;
+}
+
+.verde {
+  background: var(--sem-verde);
+  color: #fff;
+  padding: 15px;
+  font-size: var(--texto-md);
+}
+
+.secundario {
+  background: var(--color-superficie);
+  color: var(--color-tinta);
+  border: 1.5px solid var(--color-borde-campo);
+  padding: 14px;
+  font-size: var(--texto-md);
+}
+
+.compacto {
+  padding: 12px 18px;
+  font-size: var(--texto-base);
+  border-radius: var(--radio-campo);
+}
+
+.texto {
+  background: none;
+  color: var(--color-marca);
+  padding: 8px;
+  font-size: var(--texto-base);
+  font-weight: 700;
+  min-height: auto;
+}
+
+.anchoCompleto {
+  width: 100%;
+}
