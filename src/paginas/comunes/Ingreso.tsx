@@ -9,6 +9,7 @@ import {
 } from '@/features/auth/authSlice';
 import { useLoginMutation } from '@/services/endpoints/auth';
 import { normalizarError } from '@/services/baseQuery';
+import { BASE_API_URL } from '@/services/urlApi';
 import { Boton, CampoTexto, Icono, Mensaje } from '@/componentes';
 import estilos from './Ingreso.module.css';
 
@@ -35,9 +36,42 @@ export function Ingreso() {
     setDetalle(undefined);
     despachar(avisoDeCierreLeido());
 
+    // El ingreso es la primera petición de la aplicación: si algo está mal
+    // configurado, se ve acá. Se deja constancia en la consola de a dónde fue y
+    // qué contestaron, porque el mensaje de pantalla no alcanza para saberlo.
+    const destino = `${BASE_API_URL}/auth/login`;
+    // eslint-disable-next-line no-console -- rastro de diagnóstico del despliegue
+    console.info(`[INOCARNE] Ingreso → POST ${destino}`);
+
     try {
       await login({ usuario: usuario.trim().toLowerCase(), password }).unwrap();
+      // eslint-disable-next-line no-console -- rastro de diagnóstico del despliegue
+      console.info('[INOCARNE] Ingreso concedido');
     } catch (fallo) {
+      const crudo = fallo as {
+        status?: number | string;
+        originalStatus?: number;
+        data?: unknown;
+        error?: string;
+      };
+      const cuerpo =
+        typeof crudo.data === 'string' ? crudo.data.slice(0, 300) : JSON.stringify(crudo.data);
+
+      console.error(
+        `[INOCARNE] Falló el ingreso contra ${destino}`,
+        {
+          estado: crudo.status,
+          estadoOriginal: crudo.originalStatus,
+          detalleDeRed: crudo.error,
+          respuesta: cuerpo,
+        },
+        // Una respuesta en HTML significa que contestó el servidor de archivos
+        // del sitio, no la API: la dirección apunta al dominio equivocado.
+        typeof crudo.data === 'string' && crudo.data.includes('<!doctype html')
+          ? '⚠️ Contestó una página HTML, no la API. La compilación publicada apunta al dominio del propio sitio.'
+          : '',
+      );
+
       const normalizado = normalizarError(fallo as never);
       setError(normalizado.mensaje);
       setDetalle(normalizado.detalle);
