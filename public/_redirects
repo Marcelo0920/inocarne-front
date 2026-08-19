@@ -1,0 +1,7 @@
+# Las rutas las resuelve el navegador: /inicio o /acciones no son archivos.
+# Sin esta regla, recargar una de ellas da la página de error de Netlify.
+#
+# Va en `public/` para que Vite la copie dentro de `dist/` al compilar: así la
+# carpeta que se sube lleva su propia regla y no depende de netlify.toml, que
+# queda fuera del zip cuando se comprime solo el resultado del build.
+/*  /index.html  200
