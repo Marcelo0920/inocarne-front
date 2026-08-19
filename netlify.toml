@@ -1,0 +1,19 @@
+# Publicación del frontend en Netlify.
+#
+# La aplicación resuelve sus rutas en el navegador: /inicio, /recepcion o
+# /acciones no son archivos en el disco. Al recargar una de ellas —o al abrir
+# un enlace directo— Netlify busca ese archivo, no lo encuentra y responde su
+# página de "Page not found".
+#
+# La regla devuelve index.html con estado 200 para cualquier ruta, y desde ahí
+# el enrutador dibuja la pantalla que corresponde. El 200 importa: con un 301
+# la dirección cambiaría en la barra y se perdería la ruta pedida.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
