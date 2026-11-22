@@ -27,9 +27,10 @@ const ETIQUETAS_POR_TIPO = {
 /**
  * Reintenta los registros pendientes, uno por uno y en orden de llegada.
  *
- * Se envían en serie a propósito: dos controles del mismo puesto y la misma
- * franja chocarían con el índice único del servidor, y en serie el segundo
- * recibe un 409 claro en lugar de una condición de carrera.
+ * Se envían en serie a propósito: el servidor numera los controles del día en
+ * el orden en que llegan. Cada control lleva la hora del teléfono del momento
+ * en que se guardó, así que un reenvío de algo que ya había llegado recibe un
+ * 409 claro en lugar de duplicarse.
  */
 export const enviarPendientes = createAsyncThunk<
   { enviados: number; fallidos: number },

@@ -8,27 +8,31 @@ import { Boton, CampoTexto, Cargando, Mensaje, useToast } from '@/componentes';
 import estilos from './Tabla.module.css';
 import propios from './Gestion.module.css';
 
-/** Rangos, horarios y tolerancia: lo que el resto del sistema da por sentado. */
+/** Rangos y controles por día: lo que el resto del sistema da por sentado. */
 export function AdminConfiguracion() {
   const { mostrar } = useToast();
   const { data: configuracion, isLoading } = useConfiguracionQuery();
   const [actualizar, { isLoading: guardando }] = useActualizarConfiguracionMutation();
 
   const [temperatura, setTemperatura] = useState<string | null>(null);
-  const [tolerancia, setTolerancia] = useState<string | null>(null);
+  const [porDiaExhibicion, setPorDiaExhibicion] = useState<string | null>(null);
+  const [porDiaRefrigeracion, setPorDiaRefrigeracion] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (isLoading || !configuracion) return <Cargando />;
 
   const valorTemperatura = temperatura ?? String(configuracion.temperaturaMaxima);
-  const valorTolerancia = tolerancia ?? String(configuracion.toleranciaMinutos);
+  const valorExhibicion = porDiaExhibicion ?? String(configuracion.controlesExhibicionPorDia);
+  const valorRefrigeracion =
+    porDiaRefrigeracion ?? String(configuracion.controlesRefrigeracionPorDia);
 
   async function guardar() {
     setError(null);
     try {
       await actualizar({
         temperaturaMaxima: Number(valorTemperatura.replace(',', '.')),
-        toleranciaMinutos: Number(valorTolerancia),
+        controlesExhibicionPorDia: Number(valorExhibicion),
+        controlesRefrigeracionPorDia: Number(valorRefrigeracion),
       }).unwrap();
       mostrar('Configuración actualizada · los estados se recalculan solos');
     } catch (fallo) {
@@ -51,11 +55,18 @@ export function AdminConfiguracion() {
           onChange={(evento) => setTemperatura(evento.target.value)}
         />
         <CampoTexto
-          etiqueta="Tolerancia horaria (minutos)"
-          ayuda="Antes y después del horario programado"
+          etiqueta="Controles de exhibición por día"
+          ayuda="Sin horario fijo: el puesto los hace cuando puede"
           type="number"
-          value={valorTolerancia}
-          onChange={(evento) => setTolerancia(evento.target.value)}
+          value={valorExhibicion}
+          onChange={(evento) => setPorDiaExhibicion(evento.target.value)}
+        />
+        <CampoTexto
+          etiqueta="Controles de refrigeración por día"
+          ayuda="Sin horario fijo: el puesto los hace cuando puede"
+          type="number"
+          value={valorRefrigeracion}
+          onChange={(evento) => setPorDiaRefrigeracion(evento.target.value)}
         />
 
         <div>
@@ -63,14 +74,6 @@ export function AdminConfiguracion() {
           <p>
             Carnes rojas: {configuracion.rangoPhRojas.min} – {configuracion.rangoPhRojas.max} ·
             Pollo: {configuracion.rangoPhPollo.min} – {configuracion.rangoPhPollo.max}
-          </p>
-        </div>
-
-        <div>
-          <div className={estilos.apagado}>Horarios programados</div>
-          <p>
-            Exhibición: {configuracion.horariosExhibicion.join(', ')} · Refrigeración:{' '}
-            {configuracion.horariosRefrigeracion.join(', ')}
           </p>
         </div>
 

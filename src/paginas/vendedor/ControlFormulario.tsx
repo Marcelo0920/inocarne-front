@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useConfiguracionQuery } from '@/services/endpoints/catalogos';
 import { useRegistrarControlMutation } from '@/services/endpoints/registros';
 import { normalizarError } from '@/services/baseQuery';
@@ -16,7 +16,7 @@ import {
   useToast,
   type Opcion,
 } from '@/componentes';
-import { estadoPrevisto, horaLocal } from '@/domain/franjas';
+import { horaLocal } from '@/domain/franjas';
 import {
   aNumero,
   textoRangoPh,
@@ -34,18 +34,17 @@ const CARNES: readonly Opcion<TipoCarne>[] = [
 ];
 
 /**
- * Registro de un control horario.
+ * Registro de un control diario.
  *
  * El de exhibición mide la carne y necesita pH y tipo; el de refrigeración mide
- * el equipo y solo lleva temperatura. Antes de guardar se avisa cómo quedará el
- * registro —a tiempo o con retraso—, que es lo que decide el servidor con la
- * hora real de llegada.
+ * el equipo y solo lleva temperatura. No hay horario ni puntualidad: el control
+ * se guarda con la hora del teléfono en el momento de tocar "Guardar", y esa
+ * misma hora viaja si queda en la cola sin conexión.
  */
 export function ControlFormulario({ tipo }: { tipo: TipoControl }) {
   const navegar = useNavigate();
   const despachar = useAppDispatch();
   const { mostrar } = useToast();
-  const { franja = '' } = useParams();
 
   const { data: configuracion, isLoading } = useConfiguracionQuery();
   const [registrar, { isLoading: guardando }] = useRegistrarControlMutation();
@@ -79,7 +78,7 @@ export function ControlFormulario({ tipo }: { tipo: TipoControl }) {
 
     const cuerpo = {
       tipo,
-      franjaProgramada: franja,
+      horaDispositivo: new Date().toISOString(),
       temperatura: aNumero(temperatura)!,
       ...(esExhibicion ? { ph: aNumero(ph)!, tipoCarne: tipoCarne! } : {}),
     };
@@ -87,7 +86,7 @@ export function ControlFormulario({ tipo }: { tipo: TipoControl }) {
     try {
       const control = await registrar(cuerpo).unwrap();
       mostrar(
-        `Control guardado · ${control.cumplimiento === 'a_tiempo' ? 'a tiempo' : 'con retraso'}` +
+        `Control guardado a las ${horaLocal(new Date(cuerpo.horaDispositivo))}` +
           (control.dentroRango ? '' : ' · valor fuera de rango'),
       );
       navegar(rutaLista);
@@ -101,7 +100,7 @@ export function ControlFormulario({ tipo }: { tipo: TipoControl }) {
             tipo: 'control',
             url: '/controles',
             cuerpo,
-            descripcion: `${esExhibicion ? 'Exhibición' : 'Refrigeración'} ${franja}`,
+            descripcion: `${esExhibicion ? 'Exhibición' : 'Refrigeración'} · ${horaLocal(new Date(cuerpo.horaDispositivo))}`,
           }),
         );
         mostrar('Sin conexión: el control se guardó y se enviará al recuperarla.');
@@ -115,14 +114,11 @@ export function ControlFormulario({ tipo }: { tipo: TipoControl }) {
   return (
     <div className={estilos.formulario}>
       <CabeceraAtras
-        titulo={`${esExhibicion ? 'Exhibición' : 'Refrigeración'} · ${franja}`}
+        titulo={esExhibicion ? 'Control de exhibición' : 'Control de refrigeración'}
         volverA={rutaLista}
       />
 
-      <SelloSistema>
-        Se registrará a las {horaLocal()} ·{' '}
-        {estadoPrevisto(franja, configuracion.toleranciaMinutos)}
-      </SelloSistema>
+      <SelloSistema>Se guardará con la hora de este teléfono: {horaLocal()}</SelloSistema>
 
       {esExhibicion && (
         <div className={estilos.bloque}>

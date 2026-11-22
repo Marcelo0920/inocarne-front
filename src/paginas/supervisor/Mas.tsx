@@ -78,7 +78,7 @@ export function Mas() {
             ruta: '/admin/configuracion',
             icono: 'configuracion' as NombreIcono,
             titulo: 'Configuración',
-            detalle: 'Rangos, horarios y tolerancia',
+            detalle: 'Rangos y controles por día',
             alerta: 0,
           },
         ]

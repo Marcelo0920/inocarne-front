@@ -62,10 +62,10 @@ export function App() {
             <Route path="/inicio" element={<Inicio />} />
             <Route path="/recepcion" element={<Recepcion />} />
             <Route path="/exhibicion" element={<Controles tipo="exhibicion" />} />
-            <Route path="/exhibicion/:franja" element={<ControlFormulario tipo="exhibicion" />} />
+            <Route path="/exhibicion/nuevo" element={<ControlFormulario tipo="exhibicion" />} />
             <Route path="/refrigeracion" element={<Controles tipo="refrigeracion" />} />
             <Route
-              path="/refrigeracion/:franja"
+              path="/refrigeracion/nuevo"
               element={<ControlFormulario tipo="refrigeracion" />}
             />
             <Route path="/limpieza" element={<Limpieza />} />

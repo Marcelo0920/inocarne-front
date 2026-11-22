@@ -19,9 +19,8 @@ const configuracion: Configuracion = {
   temperaturaMaxima: 5,
   rangoPhRojas: { min: 5.4, max: 5.8 },
   rangoPhPollo: { min: 5.8, max: 6.2 },
-  horariosExhibicion: ['07:00', '10:30', '13:30'],
-  horariosRefrigeracion: ['07:00', '13:30'],
-  toleranciaMinutos: 15,
+  controlesExhibicionPorDia: 3,
+  controlesRefrigeracionPorDia: 2,
   diasAvisoPlagas: [7, 3, 1, 0],
   diasAvisoMantenimiento: 15,
   puntosLimpieza: ['Higiene del personal'],
@@ -140,17 +139,15 @@ describe('registro de un control', () => {
   const store = () =>
     crearStore({ auth: { token: 'tok-123', usuario: vendedor, motivoCierre: null } });
 
-  it('envía solo lo que el vendedor completó: la hora la pone el servidor', async () => {
+  it('envía lo que el vendedor completó y la hora del teléfono, nunca la del servidor', async () => {
     const tienda = store();
-    fetchSimulado.mockResolvedValueOnce(
-      respuesta({ id: 'c1', cumplimiento: 'a_tiempo', dentroRango: true }, 201),
-    );
+    fetchSimulado.mockResolvedValueOnce(respuesta({ id: 'c1', numero: 1, dentroRango: true }, 201));
 
     await tienda
       .dispatch(
         registrosApi.endpoints.registrarControl.initiate({
           tipo: 'exhibicion',
-          franjaProgramada: '10:30',
+          horaDispositivo: '2026-02-09T14:32:00.000Z',
           temperatura: 4,
           ph: 5.6,
           tipoCarne: 'res',
@@ -163,7 +160,7 @@ describe('registro de un control', () => {
     expect(peticion.url).toContain('/api/controles');
     expect(peticion.cuerpo).toEqual({
       tipo: 'exhibicion',
-      franjaProgramada: '10:30',
+      horaDispositivo: '2026-02-09T14:32:00.000Z',
       temperatura: 4,
       ph: 5.6,
       tipoCarne: 'res',
@@ -175,19 +172,19 @@ describe('registro de un control', () => {
   it('vuelve a pedir el día y el panel después de registrar', async () => {
     const tienda = store();
 
-    fetchSimulado.mockResolvedValueOnce(respuesta({ dia: '2026-02-09', franjas: [] }));
+    fetchSimulado.mockResolvedValueOnce(respuesta({ dia: '2026-02-09', controles: [] }));
     await tienda.dispatch(registrosApi.endpoints.diaDeControles.initiate()).unwrap();
     expect(fetchSimulado).toHaveBeenCalledTimes(1);
 
     fetchSimulado.mockResolvedValueOnce(respuesta({ id: 'c1' }, 201));
     // La recarga que dispara la invalidación.
-    fetchSimulado.mockResolvedValueOnce(respuesta({ dia: '2026-02-09', franjas: [] }));
+    fetchSimulado.mockResolvedValueOnce(respuesta({ dia: '2026-02-09', controles: [] }));
 
     await tienda
       .dispatch(
         registrosApi.endpoints.registrarControl.initiate({
           tipo: 'refrigeracion',
-          franjaProgramada: '07:00',
+          horaDispositivo: '2026-02-09T11:05:00.000Z',
           temperatura: 3,
         }),
       )
@@ -207,10 +204,7 @@ describe('registro de un control', () => {
   it('propaga el conflicto cuando el control ya fue registrado', async () => {
     const tienda = store();
     fetchSimulado.mockResolvedValueOnce(
-      respuesta(
-        { error: { codigo: 'CONFLICT', mensaje: 'El control de 10:30 de hoy ya fue registrado.' } },
-        409,
-      ),
+      respuesta({ error: { codigo: 'CONFLICT', mensaje: 'Este control ya fue registrado.' } }, 409),
     );
 
     await expect(
@@ -218,7 +212,7 @@ describe('registro de un control', () => {
         .dispatch(
           registrosApi.endpoints.registrarControl.initiate({
             tipo: 'exhibicion',
-            franjaProgramada: '10:30',
+            horaDispositivo: '2026-02-09T14:32:00.000Z',
             temperatura: 4,
             ph: 5.6,
             tipoCarne: 'res',

@@ -9,9 +9,8 @@ const configuracion: Configuracion = {
   temperaturaMaxima: 5,
   rangoPhRojas: { min: 5.4, max: 5.8 },
   rangoPhPollo: { min: 5.8, max: 6.2 },
-  horariosExhibicion: ['07:00', '10:30', '13:30'],
-  horariosRefrigeracion: ['07:00', '13:30'],
-  toleranciaMinutos: 15,
+  controlesExhibicionPorDia: 3,
+  controlesRefrigeracionPorDia: 2,
   diasAvisoPlagas: [7, 3, 1, 0],
   diasAvisoMantenimiento: 15,
   puntosLimpieza: ['Higiene del personal', 'Limpieza del piso'],
@@ -19,44 +18,56 @@ const configuracion: Configuracion = {
   puntosInspeccionPuesto: ['Limpieza — mesones'],
 };
 
+/** Un control del día, sin registro todavía. */
+const pendiente = (tipo: 'exhibicion' | 'refrigeracion', numero: number) => ({
+  tipo,
+  numero,
+  estado: 'pendiente' as const,
+  semaforo: 'gris' as const,
+  registro: null,
+});
+
 const diaVacio: DiaDeControles = {
   dia: '2026-08-18',
-  franjas: [
+  controles: [
+    pendiente('exhibicion', 1),
+    pendiente('exhibicion', 2),
+    pendiente('exhibicion', 3),
+    pendiente('refrigeracion', 1),
+    pendiente('refrigeracion', 2),
+  ],
+};
+
+/** Control registrado: el teléfono marcó 10:05 (La Paz) y el servidor lo recibió 11:30. */
+const registroFueraDeRango = {
+  id: 'c1',
+  puestoId: 'p1',
+  usuarioId: 'u1',
+  tipo: 'exhibicion' as const,
+  numero: 1,
+  dia: '2026-08-18',
+  horaDispositivo: '2026-08-18T14:05:00.000Z',
+  registradoEn: '2026-08-18T15:30:00.000Z',
+  temperatura: 7.2,
+  ph: 5.6,
+  tipoCarne: 'res' as const,
+  dentroRango: false,
+  desviaciones: ['Temperatura 7,2 °C fuera de rango'],
+};
+
+const diaConUnRegistro: DiaDeControles = {
+  dia: '2026-08-18',
+  controles: [
     {
-      tipo: 'exhibicion',
-      franjaProgramada: '07:00',
-      estado: 'no_realizado',
+      ...pendiente('exhibicion', 1),
+      estado: 'realizado',
       semaforo: 'rojo',
-      registro: null,
+      registro: registroFueraDeRango,
     },
-    {
-      tipo: 'exhibicion',
-      franjaProgramada: '10:30',
-      estado: 'pendiente',
-      semaforo: 'gris',
-      registro: null,
-    },
-    {
-      tipo: 'exhibicion',
-      franjaProgramada: '13:30',
-      estado: 'pendiente',
-      semaforo: 'gris',
-      registro: null,
-    },
-    {
-      tipo: 'refrigeracion',
-      franjaProgramada: '07:00',
-      estado: 'no_realizado',
-      semaforo: 'rojo',
-      registro: null,
-    },
-    {
-      tipo: 'refrigeracion',
-      franjaProgramada: '13:30',
-      estado: 'pendiente',
-      semaforo: 'gris',
-      registro: null,
-    },
+    pendiente('exhibicion', 2),
+    pendiente('exhibicion', 3),
+    pendiente('refrigeracion', 1),
+    pendiente('refrigeracion', 2),
   ],
 };
 
@@ -153,62 +164,48 @@ describe('inicio del vendedor', () => {
     expect(store.getState().auth.token).toBeNull();
   });
 
-  it('avisa cuando hay un control no realizado', async () => {
+  it('avisa cuando un control quedó fuera de rango', async () => {
+    vi.stubGlobal('fetch', apiSimulada({ '/api/controles/dia': diaConUnRegistro }));
     renderizar(<App />, { ruta: '/inicio', estado: conSesion() });
 
-    expect(
-      await screen.findByText('Hay un control no realizado o fuera de rango'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('Hay un control fuera de rango')).toBeInTheDocument();
   });
 
-  it('destaca el control que toca ahora', async () => {
-    // La franja se sitúa en la hora local actual, dentro de la tolerancia.
-    const horaAhora = new Intl.DateTimeFormat('es-BO', {
-      timeZone: 'America/La_Paz',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    }).format(new Date());
-
-    vi.stubGlobal(
-      'fetch',
-      apiSimulada({
-        '/api/controles/dia': {
-          dia: '2026-08-18',
-          franjas: [
-            {
-              tipo: 'exhibicion',
-              franjaProgramada: horaAhora,
-              estado: 'pendiente',
-              semaforo: 'gris',
-              registro: null,
-            },
-          ],
-        },
-      }),
-    );
-
+  it('sin horarios: muestra cuántos controles faltan y nunca "Le toca ahora"', async () => {
     renderizar(<App />, { ruta: '/inicio', estado: conSesion() });
 
-    // El servidor devolvió "pendiente"; la interfaz lo afina a "le toca ahora".
-    expect(await screen.findByText('Le toca ahora')).toBeInTheDocument();
+    expect(await screen.findByText('0 de 3 hechos')).toBeInTheDocument();
+    expect(screen.getByText('0 de 2 hechos')).toBeInTheDocument();
+    expect(screen.queryByText('Le toca ahora')).not.toBeInTheDocument();
   });
 });
 
 describe('control de exhibición', () => {
-  it('lista las tres franjas con su estado', async () => {
+  it('lista los controles del día sin horarios y ofrece registrar el siguiente', async () => {
     renderizar(<App />, { ruta: '/exhibicion', estado: conSesion() });
 
-    expect(await screen.findByText('07:00')).toBeInTheDocument();
-    expect(screen.getByText('10:30')).toBeInTheDocument();
-    expect(screen.getByText('13:30')).toBeInTheDocument();
-    expect(screen.getByText('No realizado')).toBeInTheDocument();
-    expect(screen.getAllByText('Más tarde')).toHaveLength(2);
+    expect(await screen.findByText('Control 1')).toBeInTheDocument();
+    expect(screen.getByText('Control 2')).toBeInTheDocument();
+    expect(screen.getByText('Control 3')).toBeInTheDocument();
+    expect(screen.getAllByText('Pendiente')).toHaveLength(3);
+    expect(screen.getAllByRole('button', { name: 'Registrar' })).toHaveLength(1);
+    expect(
+      screen.queryByText(/A tiempo|Con retraso|Más tarde|07:00|10:30/),
+    ).not.toBeInTheDocument();
+  });
+
+  it('un control registrado muestra la hora del teléfono, no la del servidor', async () => {
+    vi.stubGlobal('fetch', apiSimulada({ '/api/controles/dia': diaConUnRegistro }));
+    renderizar(<App />, { ruta: '/exhibicion', estado: conSesion() });
+
+    expect(await screen.findByText('Registrado 10:05')).toBeInTheDocument();
+    expect(screen.getByText('Fuera de rango')).toBeInTheDocument();
+    expect(screen.queryByText(/11:30/)).not.toBeInTheDocument();
   });
 
   it('valida la temperatura mientras se escribe', async () => {
     const usuario = userEvent.setup();
-    renderizar(<App />, { ruta: '/refrigeracion/07%3A00', estado: conSesion() });
+    renderizar(<App />, { ruta: '/refrigeracion/nuevo', estado: conSesion() });
 
     const campo = await screen.findByLabelText('Temperatura de la cámara (°C)');
 
@@ -221,28 +218,53 @@ describe('control de exhibición', () => {
   });
 
   it('el control de refrigeración no pide pH', async () => {
-    renderizar(<App />, { ruta: '/refrigeracion/07%3A00', estado: conSesion() });
+    renderizar(<App />, { ruta: '/refrigeracion/nuevo', estado: conSesion() });
 
     await screen.findByLabelText('Temperatura de la cámara (°C)');
     expect(screen.queryByLabelText('pH')).not.toBeInTheDocument();
   });
 
   it('el de exhibición pide pH y no lo deja escribir sin tipo de carne', async () => {
-    renderizar(<App />, { ruta: '/exhibicion/10%3A30', estado: conSesion() });
+    renderizar(<App />, { ruta: '/exhibicion/nuevo', estado: conSesion() });
 
     expect(await screen.findByLabelText('pH')).toBeDisabled();
     expect(screen.getByText('Elija primero el tipo de carne')).toBeInTheDocument();
   });
 
-  it('avisa cómo quedará el registro antes de guardarlo', async () => {
-    renderizar(<App />, { ruta: '/exhibicion/10%3A30', estado: conSesion() });
+  it('avisa que se guardará con la hora de este teléfono, sin puntualidad', async () => {
+    renderizar(<App />, { ruta: '/exhibicion/nuevo', estado: conSesion() });
 
-    expect(await screen.findByText(/quedará (A TIEMPO|CON RETRASO)/)).toBeInTheDocument();
+    expect(await screen.findByText(/hora de este teléfono/)).toBeInTheDocument();
+    expect(screen.queryByText(/A TIEMPO|CON RETRASO/)).not.toBeInTheDocument();
+  });
+
+  it('envía la hora del teléfono del momento de guardar', async () => {
+    const usuario = userEvent.setup();
+    const api = apiSimulada();
+    vi.stubGlobal('fetch', api);
+    renderizar(<App />, { ruta: '/refrigeracion/nuevo', estado: conSesion() });
+
+    await usuario.type(await screen.findByLabelText('Temperatura de la cámara (°C)'), '3');
+    const antes = Date.now();
+    await usuario.click(screen.getByRole('button', { name: 'Guardar control' }));
+
+    const envio = await waitFor(() => {
+      const llamada = api.mock.calls.find(
+        ([entrada]) => entrada instanceof Request && entrada.method === 'POST',
+      );
+      expect(llamada).toBeDefined();
+      return llamada![0] as Request;
+    });
+    const cuerpo = (await envio.clone().json()) as Record<string, unknown>;
+
+    expect(cuerpo).toMatchObject({ tipo: 'refrigeracion', temperatura: 3 });
+    expect(Math.abs(new Date(String(cuerpo.horaDispositivo)).getTime() - antes)).toBeLessThan(5000);
+    expect(cuerpo).not.toHaveProperty('registradoEn');
   });
 
   it('enumera lo que falta en lugar de fallar sin explicación', async () => {
     const usuario = userEvent.setup();
-    renderizar(<App />, { ruta: '/exhibicion/10%3A30', estado: conSesion() });
+    renderizar(<App />, { ruta: '/exhibicion/nuevo', estado: conSesion() });
 
     await usuario.click(await screen.findByRole('button', { name: 'Guardar control' }));
 

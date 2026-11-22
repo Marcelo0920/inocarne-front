@@ -46,7 +46,7 @@ export const catalogosApi = api.injectEndpoints({
 
     actualizarConfiguracion: build.mutation<Configuracion, Partial<Configuracion>>({
       query: (cambios) => ({ url: '/configuracion', method: 'PATCH', body: cambios }),
-      // Cambiar horarios o tolerancia altera todos los estados calculados.
+      // Cambiar cuántos controles van por día altera todos los estados calculados.
       invalidatesTags: ['Configuracion', 'Dashboard', 'DiaControles', 'Control'],
     }),
 

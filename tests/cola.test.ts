@@ -22,8 +22,8 @@ function respuesta(cuerpo: unknown, status = 200): Response {
 const unControl = {
   tipo: 'control' as const,
   url: '/controles',
-  cuerpo: { tipo: 'exhibicion', franjaProgramada: '10:30', temperatura: 4 },
-  descripcion: 'Control de exhibición 10:30',
+  cuerpo: { tipo: 'exhibicion', horaDispositivo: '2026-08-18T14:32:00.000Z', temperatura: 4 },
+  descripcion: 'Exhibición · 10:32',
 };
 
 const unaLimpieza = {

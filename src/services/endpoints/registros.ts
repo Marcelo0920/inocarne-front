@@ -42,7 +42,8 @@ export interface NuevaRecepcion {
 export interface NuevoControl {
   puestoId?: string;
   tipo: TipoControl;
-  franjaProgramada: string;
+  /** Hora del teléfono al guardar, en ISO 8601. */
+  horaDispositivo: string;
   temperatura: number;
   ph?: number;
   tipoCarne?: TipoCarne;
@@ -58,9 +59,11 @@ export interface NuevaLimpieza {
 }
 
 /**
- * Registros diarios del puesto: recepción, controles horarios y limpieza.
+ * Registros diarios del puesto: recepción, controles diarios y limpieza.
  *
- * Ninguna de estas operaciones envía la fecha ni la hora: las pone el servidor.
+ * Recepción y limpieza no envían fecha ni hora: las pone el servidor. Los
+ * controles envían la hora del teléfono, que es la que se muestra; el servidor
+ * guarda además la suya, sin mostrarla.
  * Tras cada registro se invalida el día correspondiente y el panel del
  * supervisor, que son las vistas que muestran el estado de cumplimiento.
  */
@@ -85,17 +88,17 @@ export const registrosApi = api.injectEndpoints({
       providesTags: (_resultado, _error, id) => [{ type: 'Recepcion', id }],
     }),
 
-    // ── Controles horarios ──────────────────────────────────
+    // ── Controles diarios ───────────────────────────────────
     registrarControl: build.mutation<Control, NuevoControl>({
       query: (datos) => ({ url: '/controles', method: 'POST', body: datos }),
       invalidatesTags: ['Control', 'DiaControles', 'Dashboard'],
     }),
 
-    /** Estado de las franjas del día: la pantalla de inicio del vendedor. */
+    /** Controles del día, hechos y pendientes: la pantalla de inicio del vendedor. */
     diaDeControles: build.query<DiaDeControles, { puestoId?: string; dia?: string } | void>({
       query: (parametros) => ({ url: '/controles/dia', params: parametros ?? undefined }),
       providesTags: ['DiaControles'],
-      // Es la vista que decide si un control sigue a tiempo: no debe quedar vieja.
+      // Es la vista que dice qué falta hoy: no debe quedar vieja.
       keepUnusedDataFor: 30,
     }),
 
@@ -103,7 +106,6 @@ export const registrosApi = api.injectEndpoints({
       Paginado<Control>,
       FiltrosHistorial & {
         tipo?: TipoControl;
-        cumplimiento?: 'a_tiempo' | 'con_retraso';
         dentroRango?: boolean;
       }
     >({

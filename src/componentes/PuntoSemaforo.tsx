@@ -6,7 +6,7 @@ const DESCRIPCION: Record<Tono, string> = {
   amarillo: 'Atención',
   rojo: 'Incumplimiento',
   gris: 'Aún no corresponde',
-  azul: 'Le toca ahora',
+  azul: 'Pendiente',
 };
 
 interface Props {

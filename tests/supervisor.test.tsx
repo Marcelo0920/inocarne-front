@@ -9,9 +9,8 @@ const configuracion: Configuracion = {
   temperaturaMaxima: 5,
   rangoPhRojas: { min: 5.4, max: 5.8 },
   rangoPhPollo: { min: 5.8, max: 6.2 },
-  horariosExhibicion: ['07:00', '10:30'],
-  horariosRefrigeracion: ['07:00'],
-  toleranciaMinutos: 15,
+  controlesExhibicionPorDia: 2,
+  controlesRefrigeracionPorDia: 1,
   diasAvisoPlagas: [7, 3, 1, 0],
   diasAvisoMantenimiento: 15,
   puntosLimpieza: ['Higiene del personal'],
@@ -23,7 +22,7 @@ const dashboard: Dashboard = {
   dia: '2026-08-18',
   columnas: [
     { clave: 'recepcion', etiqueta: 'Recep.', grupo: 'Recepción' },
-    { clave: 'exhibicion-07:00', etiqueta: '07:00', grupo: 'Exhibición' },
+    { clave: 'exhibicion-1', etiqueta: 'Control 1', grupo: 'Exhibición' },
   ],
   filas: [
     {
@@ -41,11 +40,11 @@ const dashboard: Dashboard = {
           detalle: 'Aceptada 05:20 · 3,1 °C',
         },
         {
-          clave: 'exhibicion-07:00',
-          etiqueta: '07:00',
+          clave: 'exhibicion-1',
+          etiqueta: 'Control 1',
           semaforo: 'verde',
-          estado: 'a_tiempo',
-          detalle: 'A tiempo 07:05',
+          estado: 'realizado',
+          detalle: null,
         },
       ],
     },
@@ -54,7 +53,10 @@ const dashboard: Dashboard = {
       numero: 5,
       nombre: 'Puesto 5',
       semaforo: 'rojo',
-      problemas: ['Recepción rechazada: olor no característico', 'Control de 07:00 no realizado'],
+      problemas: [
+        'Recepción rechazada: olor no característico',
+        'Control 1 de exhibición no realizado',
+      ],
       celdas: [
         {
           clave: 'recepcion',
@@ -64,8 +66,8 @@ const dashboard: Dashboard = {
           detalle: 'RECHAZADA 05:35',
         },
         {
-          clave: 'exhibicion-07:00',
-          etiqueta: '07:00',
+          clave: 'exhibicion-1',
+          etiqueta: 'Control 1',
           semaforo: 'rojo',
           estado: 'no_realizado',
           detalle: 'No realizado',
@@ -192,7 +194,7 @@ describe('panel general', () => {
 
     expect(await screen.findByText('Puesto 5 — detalle del día')).toBeInTheDocument();
     expect(screen.getByText('Recepción rechazada: olor no característico')).toBeInTheDocument();
-    expect(screen.getByText('Control de 07:00 no realizado')).toBeInTheDocument();
+    expect(screen.getByText('Control 1 de exhibición no realizado')).toBeInTheDocument();
   });
 });
 

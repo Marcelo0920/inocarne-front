@@ -2,29 +2,12 @@ import type { NombreIcono } from '@/componentes/Icono';
 import type { EstadoControl, Semaforo, TipoCarne } from '@/types/dominio';
 
 /**
- * Zona horaria del mercado. El servidor manda instantes en UTC; aquí solo se
- * traducen para compararlos con los horarios programados, que son hora local.
+ * Zona horaria del mercado. El servidor manda instantes en UTC; aquí se
+ * traducen a la hora local para mostrarlos.
  */
 export const ZONA_HORARIA = 'America/La_Paz';
 
-/**
- * Estado que ve el vendedor.
- *
- * Es el del servidor más un caso que la API no distingue: `ahora`. El servidor
- * responde `pendiente` tanto para "todavía falta" como para "le toca en este
- * momento", y para el vendedor no es lo mismo — uno se puede ignorar y el otro
- * hay que atenderlo ya. La diferencia se calcula aquí con la tolerancia
- * configurada, sin pedirle nada más al servidor.
- */
-export type EstadoFranjaVista = EstadoControl | 'ahora';
-
 export type Tono = Semaforo | 'azul';
-
-/** `HH:mm` local a minutos desde medianoche. */
-export function aMinutos(hora: string): number {
-  const [h = '0', m = '0'] = hora.split(':');
-  return Number(h) * 60 + Number(m);
-}
 
 /** Hora local del mercado, en `HH:mm`. */
 export function horaLocal(instante: Date = new Date()): string {
@@ -48,49 +31,29 @@ export function diaLocal(instante: Date = new Date()): string {
   }).format(instante);
 }
 
-/**
- * Afina el estado que devolvió la API.
- * Solo puede convertir `pendiente` en `ahora`; el resto se respeta tal cual,
- * porque los decide el servidor y son los que quedan registrados.
- */
-export function afinarEstado(
-  estadoDelServidor: EstadoControl,
-  franjaProgramada: string,
-  toleranciaMinutos: number,
-  ahora: Date = new Date(),
-): EstadoFranjaVista {
-  if (estadoDelServidor !== 'pendiente') return estadoDelServidor;
-
-  const minutosAhora = aMinutos(horaLocal(ahora));
-  const minutosFranja = aMinutos(franjaProgramada);
-  const dentroDeLaVentana =
-    minutosAhora >= minutosFranja - toleranciaMinutos &&
-    minutosAhora <= minutosFranja + toleranciaMinutos;
-
-  return dentroDeLaVentana ? 'ahora' : 'pendiente';
-}
-
-export interface EtiquetaFranja {
+export interface EtiquetaControl {
   tono: Tono;
   texto: string;
   /** Icono del chip: refuerza el estado sin depender del color. */
   icono: NombreIcono;
   detalle: string;
-  /** `true` cuando la tarjeta debe resaltarse: es lo que toca hacer ahora. */
+  /** `true` en el siguiente control por hacer: es el que se ofrece registrar. */
   destacada: boolean;
-  /** `true` si todavía se puede registrar. Un control ya hecho no se repite. */
+  /** `true` si se ofrece registrarlo. Un control ya hecho no se repite. */
   registrable: boolean;
 }
 
-/** Cómo se muestra una franja: chip, texto de apoyo y si acepta registro. */
-export function etiquetaDeFranja(
-  estado: EstadoFranjaVista,
-  opciones: { dentroRango?: boolean; horaRegistro?: string; toleranciaMinutos: number },
-): EtiquetaFranja {
-  const { dentroRango = true, horaRegistro, toleranciaMinutos } = opciones;
+/**
+ * Cómo se muestra un control del día. No hay horario ni puntualidad: solo si
+ * está hecho, si su medición está en rango y cuál es el siguiente por hacer.
+ */
+export function etiquetaDeControl(
+  estado: EstadoControl,
+  opciones: { dentroRango?: boolean; horaRegistro?: string; siguiente?: boolean },
+): EtiquetaControl {
+  const { dentroRango = true, horaRegistro, siguiente = false } = opciones;
   const registrado = `Registrado ${horaRegistro ?? ''}`.trim();
 
-  // Una medición fuera de rango manda sobre la puntualidad: es lo grave.
   if (horaRegistro && !dentroRango) {
     return {
       tono: 'rojo',
@@ -103,62 +66,43 @@ export function etiquetaDeFranja(
   }
 
   switch (estado) {
-    case 'a_tiempo':
+    case 'realizado':
       return {
         tono: 'verde',
-        texto: 'A tiempo',
+        texto: 'Hecho',
         icono: 'cumple',
         detalle: registrado,
         destacada: false,
         registrable: false,
-      };
-    case 'con_retraso':
-      return {
-        tono: 'amarillo',
-        texto: 'Con retraso',
-        icono: 'cumple',
-        detalle: registrado,
-        destacada: false,
-        registrable: false,
-      };
-    case 'ahora':
-      return {
-        tono: 'azul',
-        texto: 'Le toca ahora',
-        icono: 'reloj',
-        detalle: `Tolerancia: ±${toleranciaMinutos} min`,
-        destacada: true,
-        registrable: true,
       };
     case 'no_realizado':
       return {
         tono: 'rojo',
         texto: 'No realizado',
         icono: 'atencion',
-        detalle: 'La ventana de tiempo ya pasó',
+        detalle: 'El día terminó sin este control',
         destacada: false,
-        registrable: true,
+        registrable: false,
       };
     case 'pendiente':
-      return {
-        tono: 'gris',
-        texto: 'Más tarde',
-        icono: 'reloj',
-        detalle: 'Todavía no le toca',
-        destacada: false,
-        registrable: true,
-      };
+      return siguiente
+        ? {
+            tono: 'azul',
+            texto: 'Pendiente',
+            icono: 'reloj',
+            detalle: 'Regístrelo cuando pueda',
+            destacada: true,
+            registrable: true,
+          }
+        : {
+            tono: 'gris',
+            texto: 'Pendiente',
+            icono: 'reloj',
+            detalle: 'Después del anterior',
+            destacada: false,
+            registrable: false,
+          };
   }
-}
-
-/** Cómo quedará el registro si se guarda en este momento. */
-export function estadoPrevisto(
-  franjaProgramada: string,
-  toleranciaMinutos: number,
-  ahora: Date = new Date(),
-): string {
-  const estado = afinarEstado('pendiente', franjaProgramada, toleranciaMinutos, ahora);
-  return estado === 'ahora' ? 'quedará A TIEMPO' : 'quedará CON RETRASO';
 }
 
 /** Rango de pH que corresponde al tipo de carne elegido. */

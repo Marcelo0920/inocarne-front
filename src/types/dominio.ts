@@ -14,8 +14,11 @@ export type ResultadoRecepcion = 'aceptado' | 'rechazado';
 export type TipoControl = 'exhibicion' | 'refrigeracion';
 export type TurnoLimpieza = 'inicial' | 'final';
 
-/** Estado de cumplimiento de un control programado. */
-export type EstadoControl = 'a_tiempo' | 'con_retraso' | 'pendiente' | 'no_realizado';
+/**
+ * Estado de un control del día. No hay horario ni puntualidad: está hecho,
+ * pendiente mientras dura el día, o no realizado cuando el día terminó.
+ */
+export type EstadoControl = 'realizado' | 'pendiente' | 'no_realizado';
 
 /** `gris` significa que todavía no corresponde realizar el control. */
 export type Semaforo = 'verde' | 'amarillo' | 'rojo' | 'gris';
@@ -72,14 +75,13 @@ export interface Rango {
   max: number;
 }
 
-/** Parámetros del sistema: rangos aceptados, horarios y plantillas de checklist. */
+/** Parámetros del sistema: rangos aceptados, controles por día y plantillas de checklist. */
 export interface Configuracion {
   temperaturaMaxima: number;
   rangoPhRojas: Rango;
   rangoPhPollo: Rango;
-  horariosExhibicion: string[];
-  horariosRefrigeracion: string[];
-  toleranciaMinutos: number;
+  controlesExhibicionPorDia: number;
+  controlesRefrigeracionPorDia: number;
   diasAvisoPlagas: number[];
   diasAvisoMantenimiento: number;
   puntosLimpieza: string[];
@@ -121,22 +123,25 @@ export interface Control {
   puestoId: string;
   usuarioId: string;
   tipo: TipoControl;
-  franjaProgramada: string;
+  /** Número del control dentro del día: 1, 2, 3… */
+  numero: number;
   dia: string;
+  /** Hora del teléfono al guardar: es la que se muestra. */
+  horaDispositivo: string;
+  /** Hora en que lo recibió el servidor. Solo para auditoría: no se muestra. */
   registradoEn: string;
   temperatura: number;
   ph?: number | null;
   tipoCarne?: TipoCarne | null;
   dentroRango: boolean;
   desviaciones: string[];
-  cumplimiento: EstadoControl;
   observaciones?: string | null;
 }
 
-/** Una franja programada del día, con o sin registro. */
-export interface EstadoFranja {
+/** Uno de los controles que corresponden en el día, con o sin registro. */
+export interface ControlDelDia {
   tipo: TipoControl;
-  franjaProgramada: string;
+  numero: number;
   estado: EstadoControl;
   semaforo: Semaforo;
   registro: Control | null;
@@ -144,7 +149,7 @@ export interface EstadoFranja {
 
 export interface DiaDeControles {
   dia: string;
-  franjas: EstadoFranja[];
+  controles: ControlDelDia[];
 }
 
 export interface Limpieza {

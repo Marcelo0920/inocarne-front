@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { useConfiguracionQuery } from '@/services/endpoints/catalogos';
 import { useDiaDeControlesQuery } from '@/services/endpoints/registros';
 import { Boton, CabeceraAtras, Cargando, Chip, Mensaje, Tarjeta } from '@/componentes';
-import { afinarEstado, etiquetaDeFranja } from '@/domain/franjas';
+import { etiquetaDeControl, horaLocal } from '@/domain/franjas';
 import type { TipoControl } from '@/types/dominio';
 import estilos from './Formulario.module.css';
 
@@ -16,28 +15,17 @@ const TITULOS: Record<TipoControl, { titulo: string; ruta: string }> = {
 };
 
 /**
- * Franjas del día para un tipo de control.
+ * Controles del día para un tipo de control.
  *
- * Cada tarjeta dice en qué estado está y solo ofrece registrar lo que todavía
- * no se registró: un control ya guardado no se puede repetir ni corregir.
+ * No tienen horario: el vendedor los hace cuando puede. Cada tarjeta dice si
+ * está hecho y a qué hora lo marcó su teléfono, y solo se ofrece registrar el
+ * siguiente que falta: un control ya guardado no se puede repetir ni corregir.
  */
 export function Controles({ tipo }: Props) {
   const navegar = useNavigate();
-  const { data: configuracion } = useConfiguracionQuery();
   const { data: dia, isLoading, isError, refetch } = useDiaDeControlesQuery();
 
   const { titulo, ruta } = TITULOS[tipo];
-  const tolerancia = configuracion?.toleranciaMinutos ?? 15;
-
-  const horarios =
-    tipo === 'exhibicion'
-      ? (configuracion?.horariosExhibicion ?? [])
-      : (configuracion?.horariosRefrigeracion ?? []);
-
-  const subtitulo =
-    horarios.length > 0
-      ? `${horarios.length === 1 ? 'Un control' : `${horarios.length} controles`} al día: ${horarios.join(', ')}`
-      : '';
 
   if (isLoading) {
     return (
@@ -60,7 +48,12 @@ export function Controles({ tipo }: Props) {
     );
   }
 
-  const franjas = dia.franjas.filter((franja) => franja.tipo === tipo);
+  const controles = dia.controles.filter((control) => control.tipo === tipo);
+  const siguiente = controles.find((control) => control.estado === 'pendiente')?.numero;
+  const subtitulo =
+    controles.length === 1
+      ? 'Un control al día, a la hora que pueda'
+      : `${controles.length} controles al día, a la hora que pueda`;
 
   return (
     <div>
@@ -68,36 +61,25 @@ export function Controles({ tipo }: Props) {
       <p className={estilos.subtitulo}>{subtitulo}</p>
 
       <div className={estilos.lista}>
-        {franjas.map((franja) => {
-          const estado = afinarEstado(franja.estado, franja.franjaProgramada, tolerancia);
-          const etiqueta = etiquetaDeFranja(estado, {
-            dentroRango: franja.registro?.dentroRango ?? true,
-            horaRegistro: franja.registro
-              ? new Intl.DateTimeFormat('es-BO', {
-                  timeZone: 'America/La_Paz',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-                }).format(new Date(franja.registro.registradoEn))
+        {controles.map((control) => {
+          const etiqueta = etiquetaDeControl(control.estado, {
+            dentroRango: control.registro?.dentroRango ?? true,
+            horaRegistro: control.registro
+              ? horaLocal(new Date(control.registro.horaDispositivo))
               : undefined,
-            toleranciaMinutos: tolerancia,
+            siguiente: control.numero === siguiente,
           });
 
           return (
-            <Tarjeta key={franja.franjaProgramada} destacada={etiqueta.destacada}>
+            <Tarjeta key={control.numero} destacada={etiqueta.destacada}>
               <div className={estilos.filaFranja}>
-                <div className={estilos.hora}>{franja.franjaProgramada}</div>
+                <div className={estilos.hora}>Control {control.numero}</div>
                 <div className={estilos.franjaCentro}>
                   <Chip tono={etiqueta.tono}>{etiqueta.texto}</Chip>
                   <span className={estilos.franjaDetalle}>{etiqueta.detalle}</span>
                 </div>
                 {etiqueta.registrable && (
-                  <Boton
-                    compacto
-                    onClick={() =>
-                      navegar(`${ruta}/${encodeURIComponent(franja.franjaProgramada)}`)
-                    }
-                  >
+                  <Boton compacto onClick={() => navegar(`${ruta}/nuevo`)}>
                     Registrar
                   </Boton>
                 )}

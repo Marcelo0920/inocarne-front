@@ -40,7 +40,7 @@ src/
     conexion/     cola de registros pendientes y su reenvío
   services/       RTK Query: definición única y un archivo por área
   domain/         reglas del lado del cliente
-                  · franjas.ts     estado de las franjas y sus etiquetas
+                  · franjas.ts     hora local, etiquetas de los controles del día
                   · validacion.ts  rangos de temperatura y pH en vivo
   componentes/    15 piezas compartidas, cada una con su CSS Module
   layouts/        armazón del vendedor, del supervisor y guardas de ruta
@@ -74,16 +74,17 @@ color a mano.
 
 ### Qué se calcula aquí y qué manda el servidor
 
-El servidor decide todo lo que queda registrado: la hora, el cumplimiento, si
+El servidor decide todo lo que queda registrado: el número del control, si
 una medición está dentro de rango, el semáforo. El frontend solo:
 
 - **Valida mientras se escribe**, con las mismas reglas, para que el vendedor
   vea el resultado antes de guardar y no lo descubra en un error del servidor.
-- **Afina `pendiente` en `ahora`.** La API distingue cuatro estados, y
-  `pendiente` cubre tanto "todavía falta" como "le toca en este momento". Para
-  el vendedor no es lo mismo, así que la diferencia se calcula aquí comparando
-  la hora local con la tolerancia configurada. Es el único estado que no viene
-  del servidor.
+- **Pone la hora del teléfono en los controles.** Los controles de exhibición y
+  de refrigeración no tienen horario ni puntualidad: se hacen cuando se puede y
+  se guardan con la hora del teléfono (o de la computadora) del momento de tocar
+  "Guardar" (`horaDispositivo`). Es la hora que se muestra. El servidor guarda
+  además la suya, que no se muestra en ninguna pantalla. La recepción y la
+  limpieza siguen sin enviar hora: la pone el servidor.
 
 ### Cola de registros pendientes
 
@@ -91,8 +92,9 @@ Si la señal se corta al guardar un control o un checklist, el registro se guard
 en la cola y se reenvía solo al recuperar la conexión; el vendedor ve un aviso
 arriba y sigue trabajando. Un `409` cuenta como enviado —el intento anterior sí
 llegó—, un rechazo de validación se descarta y un error del servidor se
-reintenta hasta cinco veces. Nunca se guarda una fecha propia: la pone el
-servidor al recibirlo, igual que en un envío normal.
+reintenta hasta cinco veces. Un control encolado conserva la hora del teléfono
+del momento en que se guardó, no la del reenvío; por eso un reenvío de algo que
+ya había llegado recibe `409` en lugar de duplicarse.
 
 ### Fotografías
 
@@ -110,7 +112,7 @@ el mismo camino.
 npm test
 ```
 
-**78 pruebas** sobre la tienda real y con `fetch` simulado:
+**95 pruebas** sobre la tienda real y con `fetch` simulado:
 
 ```
 tests/authSlice.test.ts    sesión, persistencia y permisos por rol
@@ -123,7 +125,7 @@ tests/supervisor.test.tsx  panel, inspecciones y acciones correctivas
 ```
 
 Cubren, entre otras cosas: que un vendedor no llegue al panel del supervisor,
-que la validación de temperatura reaccione al escribir, que el quinto estado
-"Le toca ahora" se derive bien, que marcar "No cumple" abra el campo del
+que la validación de temperatura reaccione al escribir, que un control se
+envíe y se muestre con la hora del teléfono, que marcar "No cumple" abra el campo del
 hallazgo y avise que se creará la acción correctiva, y que no se pueda cerrar
 una no conformidad sin haber registrado antes qué se hizo.

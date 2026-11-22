@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/app/hooks';
 import { selectUsuario } from '@/features/auth/authSlice';
-import { useConfiguracionQuery } from '@/services/endpoints/catalogos';
 import {
   useDiaDeControlesQuery,
   useDiaDeLimpiezaQuery,
@@ -9,9 +8,9 @@ import {
 } from '@/services/endpoints/registros';
 import { useEquiposQuery } from '@/services/endpoints/equipos';
 import { useNotificacionesSinLeerQuery } from '@/services/endpoints/gestion';
-import { afinarEstado, diaLocal, horaLocal, type Tono } from '@/domain/franjas';
+import { diaLocal, horaLocal, type Tono } from '@/domain/franjas';
 import { Chip, Icono, Logo, type NombreIcono } from '@/componentes';
-import type { EstadoFranja, TipoControl } from '@/types/dominio';
+import type { ControlDelDia, TipoControl } from '@/types/dominio';
 import estilos from './Inicio.module.css';
 
 interface Resumen {
@@ -36,40 +35,36 @@ function fechaLegible(): string {
  * Pantalla de inicio del vendedor.
  *
  * Responde una sola pregunta: qué me falta hacer hoy. Cada tarjeta lleva su
- * estado, y lo que toca en este momento se destaca sobre el resto.
+ * estado; los controles no tienen horario, así que se cuentan los que faltan.
  */
 export function Inicio() {
   const navegar = useNavigate();
   const usuario = useAppSelector(selectUsuario);
 
-  const { data: configuracion } = useConfiguracionQuery();
   const { data: dia } = useDiaDeControlesQuery();
   const { data: limpieza } = useDiaDeLimpiezaQuery();
   const { data: recepciones } = useRecepcionesQuery({ desde: diaLocal(), hasta: diaLocal() });
   const { data: equipos } = useEquiposQuery();
   const { data: sinLeer } = useNotificacionesSinLeerQuery();
 
-  const tolerancia = configuracion?.toleranciaMinutos ?? 15;
+  const controlesDe = (tipo: TipoControl): ControlDelDia[] =>
+    (dia?.controles ?? []).filter((control) => control.tipo === tipo);
 
-  /** Estado de las franjas de un tipo, ya afinado con el caso "le toca ahora". */
-  const franjasDe = (tipo: TipoControl): EstadoFranja[] =>
-    (dia?.franjas ?? []).filter((franja) => franja.tipo === tipo);
-
+  /**
+   * Resumen de un tipo de control. No hay horario: solo cuántos van, cuántos
+   * faltan y si alguno quedó fuera de rango.
+   */
   function resumenDeControles(tipo: TipoControl): Resumen {
-    const franjas = franjasDe(tipo);
-    if (franjas.length === 0) {
-      return { tono: 'gris', texto: 'Sin horarios', detalle: '', destacada: false };
+    const controles = controlesDe(tipo);
+    if (controles.length === 0) {
+      return { tono: 'gris', texto: 'Sin controles', detalle: '', destacada: false };
     }
 
-    const estados = franjas.map((franja) =>
-      afinarEstado(franja.estado, franja.franjaProgramada, tolerancia),
-    );
-    const hechos = franjas.filter((franja) => franja.registro !== null).length;
-    const total = franjas.length;
+    const hechos = controles.filter((control) => control.registro !== null).length;
+    const total = controles.length;
 
-    const hayProblema = franjas.some(
-      (franja, indice) =>
-        estados[indice] === 'no_realizado' || franja.registro?.dentroRango === false,
+    const hayProblema = controles.some(
+      (control) => control.estado === 'no_realizado' || control.registro?.dentroRango === false,
     );
     if (hayProblema) {
       return {
@@ -80,23 +75,15 @@ export function Inicio() {
       };
     }
 
-    if (estados.includes('ahora')) {
-      return {
-        tono: 'azul',
-        texto: 'Le toca ahora',
-        detalle: `${hechos} de ${total} hechos`,
-        destacada: true,
-      };
-    }
-
     if (hechos === total) {
       return { tono: 'verde', texto: 'Hecho', detalle: `${total} de ${total}`, destacada: false };
     }
 
+    const faltan = total - hechos;
     return {
-      tono: 'gris',
-      texto: `${hechos} de ${total}`,
-      detalle: 'Siguiente más tarde',
+      tono: 'azul',
+      texto: faltan === 1 ? 'Falta 1' : `Faltan ${faltan}`,
+      detalle: `${hechos} de ${total} hechos`,
       destacada: false,
     };
   }
@@ -135,13 +122,10 @@ export function Inicio() {
   const exhibicion = resumenDeControles('exhibicion');
   const refrigeracion = resumenDeControles('refrigeracion');
 
-  const aviso = exhibicion.destacada
-    ? 'Le toca el control de exhibición'
-    : refrigeracion.destacada
-      ? 'Le toca el control de refrigeración'
-      : exhibicion.tono === 'rojo' || refrigeracion.tono === 'rojo'
-        ? 'Hay un control no realizado o fuera de rango'
-        : null;
+  const aviso =
+    exhibicion.tono === 'rojo' || refrigeracion.tono === 'rojo'
+      ? 'Hay un control fuera de rango'
+      : null;
 
   const tarjetas = [
     {
@@ -191,7 +175,7 @@ export function Inicio() {
           <button
             type="button"
             className={estilos.aviso}
-            onClick={() => navegar(exhibicion.destacada ? '/exhibicion' : '/refrigeracion')}
+            onClick={() => navegar(exhibicion.tono === 'rojo' ? '/exhibicion' : '/refrigeracion')}
           >
             <Icono nombre="reloj" tamano={20} />
             <span className={estilos.avisoTexto}>{aviso}</span>

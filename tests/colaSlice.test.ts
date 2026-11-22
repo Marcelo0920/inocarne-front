@@ -20,8 +20,8 @@ const vacia: EstadoCola = { pendientes: [], enviando: false, enLinea: true };
 const unControl = {
   tipo: 'control' as const,
   url: '/controles',
-  cuerpo: { tipo: 'exhibicion', franjaProgramada: '10:30', temperatura: 4 },
-  descripcion: 'Control de exhibición 10:30',
+  cuerpo: { tipo: 'exhibicion', horaDispositivo: '2026-08-18T14:32:00.000Z', temperatura: 4 },
+  descripcion: 'Exhibición · 10:32',
 };
 
 describe('cola de registros pendientes', () => {
@@ -40,10 +40,13 @@ describe('cola de registros pendientes', () => {
     expect(estado.pendientes[0]?.creadoEn).toEqual(expect.any(Number));
   });
 
-  it('no guarda fecha ni hora propias: las pone el servidor al recibirlo', () => {
+  it('conserva la hora del teléfono del momento de guardar y no agrega la del servidor', () => {
     const estado = colaReducer(vacia, encolado(unControl));
+    const cuerpo = estado.pendientes[0]?.cuerpo as Record<string, unknown>;
 
-    expect(JSON.stringify(estado.pendientes[0]?.cuerpo)).not.toMatch(/registradoEn|fecha|hora/i);
+    expect(cuerpo.horaDispositivo).toBe('2026-08-18T14:32:00.000Z');
+    expect(cuerpo).not.toHaveProperty('registradoEn');
+    expect(cuerpo).not.toHaveProperty('dia');
   });
 
   it('conserva el orden de llegada', () => {
