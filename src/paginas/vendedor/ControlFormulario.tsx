@@ -30,7 +30,6 @@ import estilos from './Formulario.module.css';
 const CARNES: readonly Opcion<TipoCarne>[] = [
   { valor: 'res', etiqueta: 'Res' },
   { valor: 'cerdo', etiqueta: 'Cerdo' },
-  { valor: 'cordero', etiqueta: 'Cordero' },
   { valor: 'pollo', etiqueta: 'Pollo' },
 ];
 

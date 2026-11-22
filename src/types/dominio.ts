@@ -9,7 +9,7 @@ export type Rol = 'puesto' | 'supervisor' | 'coordinador' | 'admin';
 /** Roles que ven la información de todos los puestos. */
 export const ROLES_SUPERVISION: readonly Rol[] = ['supervisor', 'coordinador', 'admin'];
 
-export type TipoCarne = 'res' | 'cerdo' | 'cordero' | 'pollo';
+export type TipoCarne = 'res' | 'cerdo' | 'pollo';
 export type ResultadoRecepcion = 'aceptado' | 'rechazado';
 export type TipoControl = 'exhibicion' | 'refrigeracion';
 export type TurnoLimpieza = 'inicial' | 'final';

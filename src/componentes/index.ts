@@ -8,6 +8,7 @@ export { CampoHallazgo, FilaChecklist, ListaChecklist, PuntosPendientes } from '
 export { GrupoPildoras, type Opcion } from './GrupoPildoras';
 export { Icono, type NombreIcono } from './Icono';
 export { LienzoFirma } from './LienzoFirma';
+export { Logo } from './Logo';
 export { Mensaje } from './Mensaje';
 export { Modal } from './Modal';
 export { PuntoSemaforo } from './PuntoSemaforo';

@@ -10,9 +10,26 @@
  */
 :root {
   /* ── Marca ──────────────────────────────────────────────── */
-  --color-marca: #1d5d9b;
-  --color-marca-oscuro: #164a7e;
-  --color-marca-suave: #e8f0f8;
+  /* El azul institucional del logo. Es el mismo que usan los módulos de
+     registro y consulta: la aplicación tiene un solo color propio. */
+  --color-marca: #163b4d;
+  --color-marca-oscuro: #0f2b39;
+  --color-marca-suave: #e6ecef;
+
+  /* ── Acento de cada módulo de supervisión ───────────────
+     Qué ruta usa cuál se decide en `domain/modulos.ts`. El tono "suave" es
+     el mismo color rebajado sobre blanco: sirve de fondo con el color pleno
+     encima y mantiene el contraste del texto. */
+  --mod-institucional: var(--color-marca);
+  --mod-institucional-suave: var(--color-marca-suave);
+  --mod-acciones: #c62828;
+  --mod-acciones-suave: #f8e9e9;
+  --mod-mantenimientos: #256d85;
+  --mod-mantenimientos-suave: #e7f0f3;
+  --mod-capacitaciones: #2e7d6b;
+  --mod-capacitaciones-suave: #e8f2f0;
+  --mod-plagas: #5b6b73;
+  --mod-plagas-suave: #edf0f1;
 
   /* ── Texto ──────────────────────────────────────────────── */
   --color-tinta: #17242f;

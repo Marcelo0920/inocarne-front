@@ -45,8 +45,10 @@
   font-weight: 600;
 }
 
+/* Cada pestaña lleva el color de su módulo (`domain/modulos.ts`): al estar
+   activa se pinta con el suyo, no con el azul de la marca. */
 .pestanaActiva {
-  color: var(--color-marca);
+  color: var(--acento, var(--color-marca));
   font-weight: 800;
 }
 
@@ -105,20 +107,18 @@
   }
 
   .logo {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radio-campo);
-    background: var(--color-marca);
-    color: #fff;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 44px;
+    height: 44px;
+    /* El dibujo es un círculo sobre blanco: se recorta en redondo. */
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
   }
 
   .nombreMarca {
     font-size: 18px;
     font-weight: 800;
+    letter-spacing: 0.02em;
     color: var(--color-marca);
   }
 
@@ -146,10 +146,18 @@
     background: var(--color-fondo);
   }
 
+  /* El icono lleva el color del módulo aunque el enlace esté en reposo: es lo
+     que permite encontrar "Acciones correctivas" sin leer la lista entera. */
+  .enlaceIcono {
+    color: var(--acento, var(--color-marca));
+    flex-shrink: 0;
+  }
+
   .enlaceActivo {
-    background: var(--color-marca-suave);
-    color: var(--color-marca);
+    background: var(--acento-suave, var(--color-marca-suave));
+    color: var(--acento, var(--color-marca));
     font-weight: 800;
+    box-shadow: inset 3px 0 0 var(--acento, var(--color-marca));
   }
 
   .enlaceEtiqueta {

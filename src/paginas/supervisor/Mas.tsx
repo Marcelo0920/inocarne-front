@@ -4,6 +4,7 @@ import { selectEsAdmin } from '@/features/auth/authSlice';
 import { useEquiposQuery } from '@/services/endpoints/equipos';
 import { useCapacitacionesQuery, useControlPlagasQuery } from '@/services/endpoints/gestion';
 import { Icono, Tarjeta, type NombreIcono } from '@/componentes';
+import { estiloDeAcento } from '@/domain/modulos';
 import estilos from './Tabla.module.css';
 import propios from './Gestion.module.css';
 
@@ -98,7 +99,7 @@ export function Mas() {
         {opciones.map((opcion) => (
           <Tarjeta key={opcion.ruta} onClick={() => navegar(opcion.ruta)}>
             <div className={propios.menuFila}>
-              <span className={propios.menuIcono}>
+              <span className={propios.menuIcono} style={estiloDeAcento(opcion.ruta)}>
                 <Icono nombre={opcion.icono} tamano={24} />
               </span>
               <span className={propios.menuTexto}>

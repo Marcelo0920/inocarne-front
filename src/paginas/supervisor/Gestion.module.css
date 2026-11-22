@@ -170,11 +170,14 @@
   gap: var(--espacio-5);
 }
 
+/* El recuadro toma el color del módulo al que lleva la fila
+   (`domain/modulos.ts`); sin acento definido se queda con el azul de la marca. */
 .menuIcono {
   width: 48px;
   height: 48px;
   border-radius: var(--radio-medio);
-  background: var(--color-marca-suave);
+  background: var(--acento-suave, var(--color-marca-suave));
+  color: var(--acento, var(--color-marca));
   display: flex;
   align-items: center;
   justify-content: center;

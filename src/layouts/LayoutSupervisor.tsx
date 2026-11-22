@@ -4,8 +4,9 @@ import { selectEtiquetaSesion } from '@/features/auth/authSlice';
 import { cerrarSesion } from '@/services/endpoints/auth';
 import { useNoConformidadesQuery } from '@/services/endpoints/supervision';
 import { useEquiposQuery } from '@/services/endpoints/equipos';
-import { BannerConexion, Boton, Icono, type NombreIcono } from '@/componentes';
+import { BannerConexion, Boton, Icono, Logo, type NombreIcono } from '@/componentes';
 import { diaLocal, horaLocal } from '@/domain/franjas';
+import { estiloDeAcento } from '@/domain/modulos';
 import estilos from './LayoutSupervisor.module.css';
 
 interface Modulo {
@@ -69,9 +70,7 @@ export function LayoutSupervisor() {
     <div className={estilos.aplicacion}>
       <nav className={estilos.barraLateral} aria-label="Módulos de supervisión">
         <div className={estilos.marca}>
-          <div className={estilos.logo}>
-            <Icono nombre="recepcion" tamano={22} />
-          </div>
+          <Logo tamano={44} className={estilos.logo} />
           <div>
             <div className={estilos.nombreMarca}>INOCARNE</div>
             <div className={estilos.rol}>Supervisión de calidad</div>
@@ -82,11 +81,12 @@ export function LayoutSupervisor() {
           <NavLink
             key={modulo.ruta}
             to={modulo.ruta}
+            style={estiloDeAcento(modulo.ruta)}
             className={({ isActive }) =>
               `${estilos.enlace} ${isActive ? estilos.enlaceActivo : ''}`
             }
           >
-            <Icono nombre={modulo.icono} tamano={18} />
+            <Icono nombre={modulo.icono} tamano={18} className={estilos.enlaceIcono} />
             <span className={estilos.enlaceEtiqueta}>{modulo.etiqueta}</span>
             {alertaDe(modulo.ruta) > 0 && (
               <span className={estilos.contador}>{alertaDe(modulo.ruta)}</span>
@@ -123,6 +123,7 @@ export function LayoutSupervisor() {
             <NavLink
               key={pestana.ruta}
               to={pestana.ruta}
+              style={estiloDeAcento(pestana.ruta)}
               className={`${estilos.pestana} ${activa ? estilos.pestanaActiva : ''}`}
             >
               <Icono nombre={pestana.icono} tamano={21} className={estilos.icono} />

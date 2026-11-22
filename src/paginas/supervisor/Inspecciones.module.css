@@ -60,11 +60,13 @@
   gap: var(--espacio-5);
 }
 
+/* Toma el color del módulo al que lleva la fila (`domain/modulos.ts`). */
 .menuIcono {
   width: 52px;
   height: 52px;
   border-radius: var(--radio-medio);
-  background: var(--color-marca-suave);
+  background: var(--acento-suave, var(--color-marca-suave));
+  color: var(--acento, var(--color-marca));
   display: flex;
   align-items: center;
   justify-content: center;

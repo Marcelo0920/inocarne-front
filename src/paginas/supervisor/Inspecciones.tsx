@@ -26,6 +26,7 @@ import {
   type Opcion,
 } from '@/componentes';
 import { diaLocal, horaLocal } from '@/domain/franjas';
+import { estiloDeAcento } from '@/domain/modulos';
 import {
   aNumero,
   textoRangoPh,
@@ -39,7 +40,6 @@ import estilos from './Inspecciones.module.css';
 const CARNES: readonly Opcion<TipoCarne>[] = [
   { valor: 'res', etiqueta: 'Res' },
   { valor: 'cerdo', etiqueta: 'Cerdo' },
-  { valor: 'cordero', etiqueta: 'Cordero' },
   { valor: 'pollo', etiqueta: 'Pollo' },
 ];
 
@@ -74,7 +74,7 @@ export function InspeccionMenu() {
         {opciones.map((opcion) => (
           <Tarjeta key={opcion.ruta} onClick={() => navegar(opcion.ruta)}>
             <div className={estilos.menuFila}>
-              <span className={estilos.menuIcono}>
+              <span className={estilos.menuIcono} style={estiloDeAcento(opcion.ruta)}>
                 <Icono nombre={opcion.icono} tamano={26} />
               </span>
               <span className={estilos.menuTexto}>

@@ -19,24 +19,25 @@
   margin-bottom: var(--espacio-2);
 }
 
+/* El logo ya es un círculo sobre blanco: se muestra tal cual, sin recuadro de
+   color que le dispute el protagonismo. */
 .logo {
-  width: 76px;
-  height: 76px;
-  border-radius: 20px;
-  background: var(--color-marca);
-  color: #fff;
-  font-size: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 96px;
+  height: 96px;
+  /* El dibujo es un círculo sobre blanco: recortarlo en redondo evita el
+     cuadrado blanco contra el fondo gris de la pantalla. */
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
   margin: 0 auto;
 }
 
 .nombre {
   font-size: var(--texto-5xl);
   font-weight: 800;
+  letter-spacing: 0.03em;
   color: var(--color-marca);
-  margin-top: var(--espacio-5);
+  margin-top: var(--espacio-4);
 }
 
 .bajada {

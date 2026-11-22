@@ -12,6 +12,22 @@
   gap: var(--espacio-4);
 }
 
+/* El logo es circular sobre blanco: recortado en redondo se apoya en el azul
+   de la cabecera sin dejar un cuadrado suelto. */
+.logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.identidad {
+  flex: 1;
+  min-width: 0;
+}
+
 .saludo {
   font-size: var(--texto-base);
   opacity: 0.85;

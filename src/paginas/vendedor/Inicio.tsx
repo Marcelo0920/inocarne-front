@@ -10,7 +10,7 @@ import {
 import { useEquiposQuery } from '@/services/endpoints/equipos';
 import { useNotificacionesSinLeerQuery } from '@/services/endpoints/gestion';
 import { afinarEstado, diaLocal, horaLocal, type Tono } from '@/domain/franjas';
-import { Chip, Icono, type NombreIcono } from '@/componentes';
+import { Chip, Icono, Logo, type NombreIcono } from '@/componentes';
 import type { EstadoFranja, TipoControl } from '@/types/dominio';
 import estilos from './Inicio.module.css';
 
@@ -174,7 +174,8 @@ export function Inicio() {
     <div>
       <header className={estilos.cabecera}>
         <div className={estilos.filaCabecera}>
-          <div>
+          <Logo tamano={44} className={estilos.logo} etiqueta="INOCARNE" />
+          <div className={estilos.identidad}>
             <div className={estilos.saludo}>
               {Number(horaLocal().slice(0, 2)) < 12 ? 'Buenos días' : 'Buenas tardes'}
             </div>

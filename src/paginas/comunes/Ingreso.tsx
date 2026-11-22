@@ -10,7 +10,7 @@ import {
 import { useLoginMutation } from '@/services/endpoints/auth';
 import { normalizarError } from '@/services/baseQuery';
 import { BASE_API_URL } from '@/services/urlApi';
-import { Boton, CampoTexto, Icono, Mensaje } from '@/componentes';
+import { Boton, CampoTexto, Logo, Mensaje } from '@/componentes';
 import estilos from './Ingreso.module.css';
 
 export function Ingreso() {
@@ -82,9 +82,7 @@ export function Ingreso() {
     <div className={estilos.pantalla}>
       <form className={estilos.tarjeta} onSubmit={(evento) => void alEnviar(evento)}>
         <div className={estilos.marca}>
-          <div className={estilos.logo}>
-            <Icono nombre="recepcion" tamano={38} />
-          </div>
+          <Logo tamano={96} className={estilos.logo} />
           <h1 className={estilos.nombre}>INOCARNE</h1>
           <p className={estilos.bajada}>Control sanitario del mercado</p>
         </div>
